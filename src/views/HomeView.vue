@@ -1,0 +1,248 @@
+<template>
+  <div class="w-full h-full overflow-y-auto">
+    <div class="flex flex-wrap">
+      <div class="bg-stone-800 h-40 w-full rounded-lg m-1 sm:(flex-1) p-2">
+        <div class="flex justify-between">
+          <div class="text-white">{{ $t("Today") }}</div>
+          <DynamicNumber
+            :value="todayExpense"
+            init
+            class="text-white text-4xl font-bold"
+          ></DynamicNumber>
+        </div>
+      </div>
+      <!-- <div
+        class="bg-stone-600 h-30 w-full rounded-lg m-1 sm:(w-[30%] h-40)"
+      ></div> -->
+    </div>
+    <ListView
+      v-if="list.length"
+      :list="list"
+      :get-range-height="getRangeHeight"
+      :footer-height="400"
+      value-key="id"
+      class="main-bill-list mx-1"
+    >
+      <template #default="{ item, index }">
+        <div>
+          <div
+            v-if="getDivideInfo(item, index)"
+            class="divider flex justify-between items-center px-4 pt-6 pb-3 cursor-pointer"
+            :class="[`divider-${index}`, { animated }]"
+          >
+            <div class="ml-7 text-sm">{{ getDivideInfo(item, index) }}</div>
+          </div>
+          <div
+            class="bill-item flex justify-between items-center px-4 py-4 rounded-lg buttoned cursor-pointer"
+            :class="[
+              `item-${index}`,
+              { animated, 'to-remove': toBeRemovedId === item.id },
+            ]"
+            @click="show(item)"
+          >
+            <div class="flex items-center">
+              <div
+                class="rounded-full bg-white border w-10 h-10 flex items-center justify-center"
+              >
+                <i :class="[getCategoryById(item.categoryId)?.icon]"></i>
+              </div>
+              <div class="flex flex-col px-4">
+                <div class="flex text-md font-semibold">
+                  <div>{{ $t(getCategoryById(item.categoryId)!.name) }}</div>
+                </div>
+                <div class="flex text-xs">
+                  <div>
+                    {{ getUserName(item.creatorId)?.name ?? "unknown user" }}
+                  </div>
+                  <template v-if="item.comment">
+                    <div class="px-1">|</div>
+                    <div>{{ item.comment }}</div>
+                  </template>
+                </div>
+              </div>
+            </div>
+            <div class="text-lg font-bold">{{ item.money }}</div>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="h-24 px-4 mt-4">
+          <div class="end flex items-center text-sm">{{ $t("ended") }}</div>
+        </div>
+      </template>
+    </ListView>
+    <div
+      v-else
+      class="flex justify-center items-center text-sm text-gray-600 pt-20"
+    >
+      {{ $t("nothing-here-add-one-bill") }}
+    </div>
+    <BillInfo
+      :controller="controller"
+      @delete="removeItem"
+      @edit="toEdit"
+    ></BillInfo>
+  </div>
+</template>
+<script setup lang="ts">
+import { getCategoryById } from "@/data/category";
+import { remove, useBills } from "@/hooks/useBills";
+import ListView from "@/components/common/List.vue";
+import DynamicNumber from "@/components/common/DynamicNumber.vue";
+
+import BillInfo from "@/components/BillInfo.vue";
+import { useBillInfo } from "@/hooks/useBillInfo";
+import dayjs from "dayjs";
+import { BillType, type Bill } from "@/data/bill";
+import { showEditor } from "@/hooks/useEditor";
+import { getUserName } from "@/hooks/useUser";
+const { list } = useBills();
+
+const { list: todayBills } = useBills((tb) =>
+  tb
+    .where("time")
+    .between(dayjs().startOf("day").unix(), dayjs().endOf("day").unix())
+);
+
+const todayExpense = computed(() =>
+  todayBills.value.reduce(
+    (p, c) => p + (c.type === BillType.Expenses ? -1 : 1) * c.money,
+    0
+  )
+);
+
+const { show, controller } = useBillInfo();
+
+const SECONDS = 24 * 60 * 60;
+
+const getDivideInfo = (current: Readonly<Bill>, index: number) => {
+  const last = list.value[index - 1];
+  if (!last) {
+    return dayjs.unix(current.time).format("YYYY-MM-DD");
+  }
+  if (last.time - current.time >= SECONDS) {
+    return dayjs.unix(current.time).format("YYYY-MM-DD");
+  }
+  return;
+};
+
+const getRangeHeight = (start: number, length: number) => {
+  let dividerCount = 0;
+  const end = Math.min(list.value.length, start + length);
+  for (let index = start; index < end; index += 1) {
+    const current = list.value[index];
+    const last = list.value[index - 1];
+    if (!last || last.time - current.time >= SECONDS) {
+      dividerCount += 1;
+    }
+  }
+  const dividerH = 56; // 2.5rem
+  const itemH = 72; // 4.5rem
+  const itemCount = end - start;
+  return dividerH * dividerCount + itemH * itemCount;
+};
+
+const animated = ref(false);
+onMounted(() => {
+  setTimeout(() => {
+    animated.value = true;
+  }, 3000);
+});
+
+const router = useRouter();
+const toEdit = (info: Bill) => {
+  showEditor("edit", info, router);
+};
+
+const toBeRemovedId = ref("");
+const removeItem = (id: string) => {
+  toBeRemovedId.value = id;
+  setTimeout(() => {
+    remove(id);
+  }, 500);
+};
+</script>
+<style lang="scss" scoped>
+.main-bill-list {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: calc(100% - 4rem - 310px);
+    background-color: black;
+    top: 0;
+    left: 2.1rem;
+    z-index: -2;
+    animation: fade 2s ease-in-out;
+  }
+  .end {
+    animation: fade 1.5s ease-in-out;
+  }
+  .end::before {
+    content: "";
+    left: 2rem;
+    z-index: -1;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    border: 1px solid black;
+    background-color: white;
+    bottom: 0;
+    margin: 0 0.9rem;
+  }
+  .animated:not(.to-remove) {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .to-remove {
+    animation: remove 0.5s ease !important;
+  }
+  .bill-item {
+    @for $i from 0 through 10 {
+      &.item-#{$i} {
+        opacity: 0;
+        animation: fly 0.5s ease-in-out $i * 0.05s forwards;
+      }
+    }
+  }
+  .divider {
+    @for $i from 0 through 10 {
+      &.divider-#{$i} {
+        animation: fade 1.5s ease-in-out;
+      }
+    }
+  }
+
+  @keyframes fly {
+    from {
+      opacity: 0;
+      transform: translateY(50vh);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes remove {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(10%);
+    }
+  }
+}
+</style>

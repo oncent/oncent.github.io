@@ -1,0 +1,60 @@
+* {
+  padding: 0;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent; /* for removing the highlight */
+  :not(input) {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #0003;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 4px;
+  }
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  min-width: 200px;
+  min-height: 200px;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overflow: hidden;
+}
+
+.icon-xs {
+  --tw-icon: 0.8;
+}
+
+.buttoned {
+  @apply transition-all hover:(bg-stone-100) active:(bg-stone-300);
+}
+
+.appearance-remove-all {
+  &.input::-webkit-outer-spin-button,
+  &.input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  &.input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+// z-index order:
+// floating-tab
+// popup router view
+// dialog
+// message

@@ -1,0 +1,135 @@
+@mixin fade {
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.2s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+}
+
+@mixin slide-right {
+  .slide-right-enter-active,
+  .slide-right-leave-active {
+    transition: all 0.2s ease;
+  }
+
+  .slide-right-enter-from,
+  .slide-right-leave-to {
+    opacity: 0;
+    transform: translateX(-20%);
+  }
+}
+
+@mixin slide-left {
+  .slide-left-enter-active,
+  .slide-left-leave-active {
+    position: absolute;
+    transition: all 0.2s ease;
+  }
+
+  .slide-left-enter-from,
+  .slide-left-leave-to {
+    position: absolute;
+    opacity: 0;
+    transform: translateX(20%);
+  }
+}
+
+@mixin popup-slide-up {
+  .popup-slide-up-enter-active,
+  .popup-slide-up-leave-active {
+    .popup-view-modal,
+    .popup-view-body {
+      transition: all 0.4s ease;
+    }
+  }
+
+  .popup-slide-up-enter-from,
+  .popup-slide-up-leave-to {
+    .popup-view-body {
+      transform: translateY(100vh);
+    }
+    .popup-view-modal {
+      opacity: 0;
+    }
+  }
+}
+@mixin popup-slide-left {
+  .popup-slide-left-enter-active,
+  .popup-slide-left-leave-active {
+    .popup-view-modal,
+    .popup-view-body {
+      transition: all 0.4s ease;
+    }
+  }
+
+  .popup-slide-left-enter-from,
+  .popup-slide-left-leave-to {
+    .popup-view-body {
+      transform: translateX(100vh);
+    }
+    .popup-view-modal {
+      opacity: 0;
+    }
+  }
+}
+
+@mixin popup-slide {
+  .popup-slide-enter-active,
+  .popup-slide-leave-active {
+    .popup-view-modal,
+    .popup-view-body {
+      transition: all 0.3s ease-out;
+    }
+  }
+
+  .popup-slide-enter-from,
+  .popup-slide-leave-to {
+    .popup-view-body {
+      transform: translateX(100vh);
+    }
+    .popup-view-modal {
+      opacity: 0;
+    }
+  }
+  @media (min-width: 640px) {
+    .popup-slide-enter-from,
+    .popup-slide-leave-to {
+      .popup-view-body {
+        transform: translateY(100vh);
+      }
+      .popup-view-modal {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+@mixin splash {
+  @keyframes splash {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+
+@mixin fall {
+  .fall-enter-active,
+  .fall-leave-active {
+    transition: all 0.2s cubic-bezier(0.47, 1.64, 0.41, 0.8);
+  }
+
+  .fall-enter-from,
+  .fall-leave-to {
+    transform: translateY(-4rem);
+  }
+}
