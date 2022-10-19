@@ -85,7 +85,6 @@ export const createNumpadController = (initValue?: number) => {
   };
 
   const remove = (index?: number) => {
-    console.log(index);
     const currentResult = result();
     const removeIndex = index ?? currentResult.text.length - 1;
     const inputArr = currentResult.text
@@ -99,7 +98,6 @@ export const createNumpadController = (initValue?: number) => {
         input(Number(x) as NumpadNumberInput);
       }
     });
-    console.log(arr);
   };
 
   const add = (a: number, b: number) => a + b;

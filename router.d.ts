@@ -4,5 +4,6 @@ declare module "vue-router" {
     popup?: boolean;
     popupOption?: any;
     transitionOption?: any;
+    popupTitle?: string;
   }
 }

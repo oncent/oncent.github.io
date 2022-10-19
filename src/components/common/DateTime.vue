@@ -21,7 +21,6 @@ const props = withDefaults(
     displayFormatter?: string | ((time: Dayjs) => string);
   }>(),
   {
-    formatter: (time: Dayjs) => time.toISOString(),
     displayFormatter: "MM-DD",
   }
 );
@@ -35,7 +34,7 @@ const display =
     : (d: Dayjs) => d.format(props.displayFormatter as string);
 
 if (props.modelValue === undefined) {
-  emit("update:modelValue", props.formatter(dayjs()));
+  emit("update:modelValue", props.formatter?.(dayjs()) ?? dayjs());
 }
 
 const onClickInput = (e: MouseEvent) => {
@@ -45,6 +44,6 @@ const onClickInput = (e: MouseEvent) => {
 const onTimeChange = (e: Event) => {
   const value = (e.target as HTMLInputElement).value;
   const time = dayjs(value);
-  emit("update:modelValue", props.formatter(time));
+  emit("update:modelValue", props.formatter?.(time) ?? time);
 };
 </script>

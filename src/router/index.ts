@@ -47,8 +47,25 @@ const router = createRouter({
     },
     {
       path: "/settings",
-      name: "settings",
       component: () => import("@/views/SettingsView.vue"),
+      children: [
+        {
+          path: "/settings",
+          name: "settings",
+          component: () => import("@/views/SettingsList.vue"),
+          meta: {
+            popupTitle: "Settings",
+          },
+        },
+        {
+          path: "/settings/sync",
+          name: "sync",
+          component: () => import("@/views/DataSync.vue"),
+          meta: {
+            popupTitle: "Share & Sync",
+          },
+        },
+      ],
       meta: {
         popup: true,
         popupOption: {

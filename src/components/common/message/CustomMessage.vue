@@ -3,7 +3,7 @@
     <transition-group name="fall" tag="div">
       <template v-for="message in messageList" :key="message.id">
         <div
-          class="message-box fixed top-1 left-0 w-full flex justify-center z-3"
+          class="message-box fixed top-1 left-0 w-full flex justify-center z-4"
         >
           <div
             class="message fixed rounded-md text-white p-1 mt-3 min-w-[300px] max-w-[90%] text-center shadow"

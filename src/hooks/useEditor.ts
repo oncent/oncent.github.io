@@ -1,10 +1,9 @@
 import { MessageType, showMessage } from "@/components/common/message";
 import { BillType, type Bill } from "@/data/bill";
 import { BillCategories } from "@/data/category";
-import type { NumpadResult } from "@/utils/numpad";
 import dayjs from "dayjs";
 import type { Router } from "vue-router";
-import { add, edit } from "./useBills";
+import { addBill, editBill } from "./useBills";
 
 type Mode = "edit" | "add";
 
@@ -73,13 +72,13 @@ export const useEditor = (router: Router) => {
       return;
     }
     if (initMode.value === "add") {
-      await add(newBill);
+      await addBill(newBill);
       goBack();
       return;
     }
     if (initMode.value === "edit") {
       if (initBill.value?.id) {
-        await edit(initBill.value?.id, newBill);
+        await editBill(initBill.value?.id, newBill);
         goBack();
       }
     }

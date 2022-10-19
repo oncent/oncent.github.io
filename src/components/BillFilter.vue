@@ -133,9 +133,9 @@
                 {{
                   allSelected
                     ? $t("all")
-                    : selectedCategories.length === 0
+                    : selectedUsers.length === 0
                     ? "None"
-                    : selectedCategories.map((c) => c.name).join(",")
+                    : selectedUsers.map((c) => c.name).join(",")
                 }}
               </div>
             </template>

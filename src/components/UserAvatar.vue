@@ -21,9 +21,11 @@ const props = withDefaults(
     name: string;
     editable?: boolean;
     bgColor?: string;
+    size?: string;
   }>(),
   {
     bgColor: "#000000",
+    size: `80px`,
   }
 );
 
@@ -57,8 +59,8 @@ const onBlur = () => {
 <style lang="scss" scoped>
 $width: 80px;
 .avatar {
-  width: $width;
-  height: $width;
+  width: v-bind(size);
+  height: v-bind(size);
   border-radius: 9999px;
   overflow: hidden;
   display: flex;
@@ -67,7 +69,7 @@ $width: 80px;
   transition: all 0.2s ease;
   &:hover,
   &:focus-within {
-    width: $width * 2;
+    width: calc(v-bind(size) * 2);
     padding: 0 25px;
     cursor: pointer;
   }

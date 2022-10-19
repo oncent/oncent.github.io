@@ -2,6 +2,10 @@
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 import PopupRouterView from "@/components/common/PopupRouterView.vue";
 import { CustomMessage } from "@/components/common/message";
+import ConfirmProvider from "@/components/common/confirm/ConfirmProvider.vue";
+import { controller } from "@/hooks/useGlobalConfirm";
+import BillInfo from "@/components/BillInfo.vue";
+import { useBillInfo } from "@/hooks/useBillInfo";
 
 const lastComponent = ref<any>();
 const getLastComponent = <T = any>(
@@ -23,6 +27,8 @@ const getPopupComponent = <T = any>(
     return comp;
   }
 };
+
+const { controller: billInfoController } = useBillInfo();
 </script>
 
 <template>
@@ -41,7 +47,9 @@ const getPopupComponent = <T = any>(
       </transition>
     </teleport>
   </router-view>
+  <BillInfo :controller="billInfoController"></BillInfo>
   <CustomMessage />
+  <ConfirmProvider :controller="controller" />
 </template>
 <style lang="scss">
 @import "@/styles/animation.scss";

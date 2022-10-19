@@ -1,6 +1,6 @@
 import { BillType, type Bill } from "@/data/bill";
 import { BillCategories } from "@/data/category";
-import { add } from "@/hooks/useBills";
+import { addBill } from "@/hooks/useBills";
 import { useUser } from "@/hooks/useUser";
 import { v4 } from "uuid";
 
@@ -34,7 +34,7 @@ export const addRandomTestData = () => {
     };
     Array.from({ length: 200 }, () => 0).forEach((_, i) => {
       const bill = createBill(i);
-      add(bill);
+      addBill(bill);
     });
   }, 1000);
 };

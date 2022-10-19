@@ -10,14 +10,5 @@ export const requestAutofocus = () => {
 };
 
 export const getFocusElement = () => {
-  // if (
-  //   document.hasFocus() &&
-  //   document.activeElement !== document.body &&
-  //   document.activeElement !== document.documentElement
-  // ) {
-  //   console.log(document.activeElement);
-  //   return document.activeElement;
-  // }
-  console.log(document.querySelector(":focus"));
   return document.querySelector(":focus");
 };

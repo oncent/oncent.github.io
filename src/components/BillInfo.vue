@@ -46,14 +46,21 @@
         </div>
       </div>
       <div class="footer flex justify-between items-center">
-        <div class="buttoned px-2 rounded-md text-red-600" @click="toDelete">
-          {{ $t("delete") }}
+        <div class="flex">
+          <div
+            v-if="props.controller.info?.creatorId === userInfo.id"
+            class="buttoned px-2 rounded-md text-red-600"
+            @click="toDelete"
+          >
+            {{ $t("delete") }}
+          </div>
         </div>
         <div class="flex">
           <div class="buttoned px-2 rounded-md" @click="close">
             {{ $t("cancel") }}
           </div>
           <div
+            v-if="props.controller.info?.creatorId === userInfo.id"
             class="buttoned ml-2 px-2 rounded-md font-semibold"
             @click="toEdit"
           >
@@ -69,7 +76,9 @@ import CustomDialog from "@/components/common/Dialog.vue";
 import type { Bill } from "@/data/bill";
 import { getCategoryById } from "@/data/category";
 import { useUser } from "@/hooks/useUser";
+import { showEditor } from "@/hooks/useEditor";
 import dayjs from "dayjs";
+import { removeBill } from "@/hooks/useBills";
 
 export type Controller = {
   info?: Bill;
@@ -88,7 +97,7 @@ const emit = defineEmits<{
 
 const formatTime = (t: number) => dayjs.unix(t).format("YYYY-MM-DD hh:mm");
 
-const { allUsers } = useUser();
+const { allUsers, userInfo } = useUser();
 const userName = computed(
   () =>
     allUsers.value.find((u) => u.id === props.controller.info?.creatorId)
@@ -100,12 +109,19 @@ const close = () => {
 };
 
 const toDelete = () => {
-  if (props.controller.info) emit("delete", props.controller.info.id);
+  if (props.controller.info) {
+    removeBill(props.controller.info.id);
+    emit("delete", props.controller.info.id);
+  }
   close();
 };
 
+const router = useRouter();
 const toEdit = () => {
-  if (props.controller.info) emit("edit", props.controller.info);
+  if (props.controller.info) {
+    showEditor("edit", props.controller.info, router);
+    emit("edit", props.controller.info);
+  }
   close();
 };
 </script>

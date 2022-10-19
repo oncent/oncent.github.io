@@ -69,38 +69,33 @@
         </div>
       </div>
     </div>
-    <BillInfo
-      :controller="controller"
-      @delete="removeItem"
-      @edit="toEdit"
-    ></BillInfo>
   </div>
 </template>
 <script setup lang="ts">
-import { isBillMatched, remove, searchBills } from "@/hooks/useBills";
+import { isBillMatched, useBills } from "@/hooks/useBills";
 import BillFilter, { type FilterProp } from "@/components/BillFilter.vue";
-import BillInfo from "@/components/BillInfo.vue";
-
 import { getCategoryById } from "@/data/category";
 import type { Bill } from "@/data/bill";
-import { useBillInfo } from "@/hooks/useBillInfo";
-import { showEditor } from "@/hooks/useEditor";
 import { getUserName } from "@/hooks/useUser";
-import Clearable from "../components/common/Clearable.vue";
+import Clearable from "@/components/common/Clearable.vue";
 import List from "@/components/common/List.vue";
+import { useBillInfo } from "@/hooks/useBillInfo";
+
+const { list: allBills } = useBills();
 
 const searchText = ref("");
 const list = ref<Bill[]>([]);
 const filter = ref<FilterProp>();
 
-const search = async () => {
+const search = () => {
+  console.log(searchText.value, filter.value, "ff");
   if (!searchText.value || !filter.value) {
     list.value = [];
     return;
   }
   const fp = filter.value;
-  list.value = await searchBills((tb) =>
-    tb.filter((b) => isBillMatched(b, { ...fp, comment: searchText.value }))
+  list.value = allBills.value.filter((b) =>
+    isBillMatched(b, { ...fp, comment: searchText.value })
   );
 };
 
@@ -111,12 +106,5 @@ const getRangeHeight = (start: number, length: number) => {
   return itemH * itemCount;
 };
 
-const { show, controller } = useBillInfo();
-const router = useRouter();
-const toEdit = (info: Bill) => {
-  showEditor("edit", info, router);
-};
-const removeItem = (id: string) => {
-  remove(id);
-};
+const { show } = useBillInfo();
 </script>

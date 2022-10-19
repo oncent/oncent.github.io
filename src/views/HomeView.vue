@@ -77,31 +77,25 @@
     >
       {{ $t("nothing-here-add-one-bill") }}
     </div>
-    <BillInfo
-      :controller="controller"
-      @delete="removeItem"
-      @edit="toEdit"
-    ></BillInfo>
   </div>
 </template>
 <script setup lang="ts">
 import { getCategoryById } from "@/data/category";
-import { remove, useBills } from "@/hooks/useBills";
+import { useBills } from "@/hooks/useBills";
 import ListView from "@/components/common/List.vue";
 import DynamicNumber from "@/components/common/DynamicNumber.vue";
-
-import BillInfo from "@/components/BillInfo.vue";
 import { useBillInfo } from "@/hooks/useBillInfo";
 import dayjs from "dayjs";
 import { BillType, type Bill } from "@/data/bill";
-import { showEditor } from "@/hooks/useEditor";
 import { getUserName } from "@/hooks/useUser";
 const { list } = useBills();
 
-const { list: todayBills } = useBills((tb) =>
-  tb
-    .where("time")
-    .between(dayjs().startOf("day").unix(), dayjs().endOf("day").unix())
+const todayBills = computed(() =>
+  list.value.filter(
+    (x) =>
+      x.time >= dayjs().startOf("day").unix() &&
+      x.time <= dayjs().endOf("day").unix()
+  )
 );
 
 const todayExpense = computed(() =>
@@ -111,7 +105,7 @@ const todayExpense = computed(() =>
   )
 );
 
-const { show, controller } = useBillInfo();
+const { show } = useBillInfo();
 
 const SECONDS = 24 * 60 * 60;
 
@@ -149,18 +143,13 @@ onMounted(() => {
   }, 3000);
 });
 
-const router = useRouter();
-const toEdit = (info: Bill) => {
-  showEditor("edit", info, router);
-};
-
 const toBeRemovedId = ref("");
-const removeItem = (id: string) => {
-  toBeRemovedId.value = id;
-  setTimeout(() => {
-    remove(id);
-  }, 500);
-};
+// const removeItem = (id: string) => {
+//   toBeRemovedId.value = id;
+//   setTimeout(() => {
+//     remove(id);
+//   }, 500);
+// };
 </script>
 <style lang="scss" scoped>
 .main-bill-list {

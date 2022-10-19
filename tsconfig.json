@@ -6,7 +6,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "lib": ["ESNext", "dom"]
+    "lib": ["ESNext", "dom","ESNext.Promise"]
   },
 
   "references": [

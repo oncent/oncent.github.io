@@ -7,12 +7,18 @@ export type User = {
   name: string;
   id: string;
   nickname?: string;
+  connectId: string;
+  me: boolean;
+  latestTransferTime: number;
 };
 
 const createInitialUser = (): User => {
   return {
     id: v4(),
     name: "Me",
+    me: true,
+    connectId: "",
+    latestTransferTime: -1,
   };
 };
 
@@ -24,6 +30,9 @@ const { result: userInfo, directlyChange } = useAsyncComputed(
   {
     name: "",
     id: "",
+    me: false,
+    connectId: "",
+    latestTransferTime: -1,
   }
 );
 
@@ -41,7 +50,7 @@ const init = async () => {
     directlyChange(newUser);
     return v;
   }
-  directlyChange(v[0]);
+  directlyChange(v.find((u) => u.me)!);
   return v;
 };
 init();
@@ -53,10 +62,33 @@ liveQuery(async () => {
   allUsers.value = v;
 });
 
+const setMyInfo = (info: Partial<Omit<User, "me" | "id">>) =>
+  db.users.update(userInfo.value.id, { ...userInfo.value, ...info });
+
+const updateUserInfo = async (
+  id: string,
+  info: Partial<Omit<User, "me" | "id">>
+) => {
+  const oldInfo = await db.users.get(id);
+  return db.users.update(id, { ...oldInfo, ...info });
+};
+
+const addUserInfo = (info: Omit<User, "me" | "id"> & { id?: string }) => {
+  return db.users.add({ ...info, id: info.id ?? v4(), me: false });
+};
+
+const removeUserInfo = (id: string) => {
+  return db.users.delete(id);
+};
+
 export const useUser = () => {
   return {
     userInfo,
     allUsers,
+    setMyInfo,
+    updateUserInfo,
+    addUserInfo,
+    removeUserInfo,
   };
 };
 

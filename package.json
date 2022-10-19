@@ -2,6 +2,7 @@
   "name": "cent",
   "version": "0.0.0",
   "scripts": {
+    "postinstall": "cp ./patch/peerjs.min.js ./node_modules/peerjs/dist/peerjs.min.js",
     "dev": "vite --host",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
@@ -15,6 +16,7 @@
     "dexie": "^3.2.2",
     "echarts": "^5.4.0",
     "lodash-es": "^4.17.21",
+    "peerjs": "^1.4.7",
     "uuid": "^9.0.0",
     "vue": "^3.2.38",
     "vue-i18n": "^9.2.2",
