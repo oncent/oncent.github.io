@@ -19,7 +19,7 @@ export const addRandomTestData = () => {
   const { userInfo } = useUser();
   setTimeout(() => {
     const createBill = (m: number) => {
-      const date = randomDate(new Date("2020/01/02"), new Date("2023/01/02"));
+      const date = randomDate(new Date("2020-01-02"), new Date("2023-01-02"));
       const type = randomItem([BillType.Expenses, BillType.Income]);
       const cate = randomItem(BillCategories.filter((x) => x.type === type));
       return {
