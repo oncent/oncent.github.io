@@ -2,6 +2,7 @@
   <label class="switch">
     <input
       type="checkbox"
+      :disabled="disabled"
       :checked="modelValue"
       @change="$emit('update:modelValue', !modelValue)"
     />
@@ -11,6 +12,7 @@
 <script lang="ts" setup>
 defineProps<{
   modelValue: boolean;
+  disabled?: boolean;
 }>();
 defineEmits<{
   (name: "update:modelValue", v: boolean): void;
@@ -63,7 +65,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(19px);
+  transform: translateX(20px);
 }
 
 /* Rounded sliders */

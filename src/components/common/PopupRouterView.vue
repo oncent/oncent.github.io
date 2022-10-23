@@ -20,9 +20,14 @@ const props = defineProps<{
   bodyClass?: string;
 }>();
 
+const route = useRoute();
+const isParentRoute = computed(() => {
+  const parent = route.matched[route.matched.length - 2];
+  return parent.path === route.path;
+});
 const router = useRouter();
 const onClickModel = () => {
-  if (props.closeOnModal) {
+  if (props.closeOnModal && isParentRoute.value) {
     router.back();
   }
 };

@@ -1,13 +1,21 @@
 <template>
-  <div class="flex flex-col">
-    <div>
-      <div>
-        My code:
-        <div class="allow-select">{{ userInfo.connectId }}</div>
+  <div class="flex flex-col divide-y">
+    <div class="flex flex-col items-center py-2 pb-4">
+      <div class="py-2">Your code:</div>
+      <div class="flex justify-center">
+        <div class="allow-select px-2 bg-stone-200 rounded flex items-center">
+          {{ userInfo.connectId }}
+        </div>
+        <button
+          class="buttoned rounded mx-2 px-4 py-2"
+          @click="copy(userInfo.connectId)"
+        >
+          <i class="icon-copy"></i>
+        </button>
       </div>
     </div>
-    <div class="pt-2">Shared users</div>
-    <div>
+    <div class="pb-4">
+      <div class="pt-2">Shared users</div>
       <div v-for="participant in participants" :key="participant.connectId">
         <SyncUser
           :name="participant.meta.name"
@@ -19,7 +27,7 @@
       </div>
     </div>
     <div class="flex justify-center py-2">
-      <div class="w-[80%] flex">
+      <div class="w-[80%] flex pt-2">
         <input
           v-model="inputCode"
           placeholder="Paste your friends code here"
@@ -54,6 +62,7 @@ import { MessageType, showMessage } from "@/components/common/message";
 import { deleteBillsByCreatorId } from "@/hooks/useBills";
 import { show } from "@/hooks/useGlobalConfirm";
 import { handleSync } from "@/data/sync";
+import { writeToClipboard } from "@/utils/clipboard";
 
 type ParticipantsMeta = {
   userId: string;
@@ -167,4 +176,13 @@ connector.onConnection(async (info, acceptConnect, rejectConnect) => {
   }
   syncing.value = false;
 });
+
+const copy = async (text: string) => {
+  if (!text) return;
+  await writeToClipboard(text);
+  showMessage({
+    content: "Copy code successfully!",
+    type: MessageType.Success,
+  });
+};
 </script>

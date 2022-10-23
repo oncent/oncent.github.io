@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full overflow-y-auto">
+  <div class="w-full h-full p-2 overflow-y-auto">
     <div class="flex flex-wrap">
       <div class="bg-stone-800 h-40 w-full rounded-lg m-1 sm:(flex-1) p-2">
         <div class="flex justify-between">

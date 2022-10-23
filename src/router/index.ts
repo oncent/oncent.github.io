@@ -54,7 +54,7 @@ const router = createRouter({
           name: "settings",
           component: () => import("@/views/SettingsList.vue"),
           meta: {
-            popupTitle: "Settings",
+            popupTitle: "settings",
           },
         },
         {
@@ -62,7 +62,7 @@ const router = createRouter({
           name: "sync",
           component: () => import("@/views/DataSync.vue"),
           meta: {
-            popupTitle: "Share & Sync",
+            popupTitle: "share-and-sync",
           },
         },
       ],

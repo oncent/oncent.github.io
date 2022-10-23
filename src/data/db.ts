@@ -48,6 +48,7 @@ export class CustomDexie extends Dexie {
   constructor() {
     super("billDatabase");
     this.version(records.version).stores(this.getStoreSchemas());
+    console.log(this.bills);
   }
 
   async addNewBillTable(tableName: string, bills: Bill[]) {

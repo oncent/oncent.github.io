@@ -10,6 +10,7 @@ export type User = {
   connectId: string;
   me: boolean;
   latestTransferTime: number;
+  trust?: boolean;
 };
 
 const createInitialUser = (): User => {
@@ -77,8 +78,9 @@ const addUserInfo = (info: Omit<User, "me" | "id"> & { id?: string }) => {
   return db.users.add({ ...info, id: info.id ?? v4(), me: false });
 };
 
-const removeUserInfo = (id: string) => {
-  return db.users.delete(id);
+const removeUserInfo = async (id: string) => {
+  await db.users.delete(id);
+  await db.deleteBillTable(id);
 };
 
 export const useUser = () => {

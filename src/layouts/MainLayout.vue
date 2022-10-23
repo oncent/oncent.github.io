@@ -15,7 +15,7 @@ const getLastComponent = <T = any>(
 </script>
 
 <template>
-  <div class="w-full h-full sm:(pl-18) p-2">
+  <div class="w-full h-full sm:(pl-18)">
     <router-view v-slot="{ Component, route }">
       <transition name="slide-right" mode="out-in">
         <component :is="getLastComponent(Component, route)"></component>

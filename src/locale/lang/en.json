@@ -1,10 +1,11 @@
 {
-  "APP_NAME": "OneCent",
+  "APP_NAME": "Cent",
   "APP_TITLE": "One bite to one cent",
   "Today": "Today",
   "ended": "end",
   "nothing-here-add-one-bill": "Nothing here, add one bill",
   "back": "Back",
+  "settings":"Settings",
   "share-and-sync": "Share & Sync",
   "language": "Language",
   "help": "Help",

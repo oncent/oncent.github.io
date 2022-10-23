@@ -2,7 +2,11 @@
   <div class="w-full h-full flex justify-center">
     <div class="h-full w-full mx-2 max-w-[600px] flex flex-col">
       <div class="filter w-full m-1 p-2">
-        <DateRangeSelector></DateRangeSelector>
+        <DateRangeSelector
+          :start="startDate"
+          :end="endDate"
+          @change="onDateRangeChange"
+        ></DateRangeSelector>
       </div>
       <div class="w-full flex flex-col items-center">
         <Chart
@@ -16,13 +20,24 @@
 <script setup lang="ts">
 import DateRangeSelector from "@/components/common/DateRangeSelector.vue";
 import { BillType, type Bill } from "@/data/bill";
-import { useBills } from "@/hooks/useBills";
+import { isTimeMatched, useBills } from "@/hooks/useBills";
 import Chart from "@/components/common/chart/Chart.vue";
 import type { ECOption } from "@/components/common/chart/chart";
 import { BillCategories } from "@/data/category";
 import { t } from "@/locale";
+import dayjs, { Dayjs } from "dayjs";
 
 const { list: bills } = useBills();
+const startDate = computed(() => {
+  const bill = bills.value.at(-1);
+  if (bill) return dayjs.unix(bill.time);
+  return undefined;
+});
+const endDate = computed(() => {
+  const bill = bills.value.at(0);
+  if (bill) return dayjs.unix(bill.time);
+  return undefined;
+});
 
 const transformToDataset = (list: Bill[]) => {
   const categories = Object.fromEntries(
@@ -46,7 +61,20 @@ const transformToDataset = (list: Bill[]) => {
     }));
 };
 
-const billDataset = computed(() => transformToDataset(bills.value));
+const rangeStart = ref<Dayjs>();
+const rangeEnd = ref<Dayjs>();
+const onDateRangeChange = (s: Dayjs, e: Dayjs) => {
+  rangeStart.value = s;
+  rangeEnd.value = e;
+};
+
+const billDataset = computed(() =>
+  transformToDataset(
+    bills.value.filter((b) =>
+      isTimeMatched(b, rangeStart.value, rangeEnd.value)
+    )
+  )
+);
 const chartOption = computed(() => {
   const op: ECOption = {
     dataset: {

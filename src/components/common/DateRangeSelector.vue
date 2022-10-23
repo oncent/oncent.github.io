@@ -33,7 +33,7 @@
     </div>
     <div
       v-if="type !== 'custom'"
-      class="slider w-full h-12 flex items-center overflow-x-scroll snap snap-always snap-mandatory snap-x"
+      class="slider w-full h-12 flex justify-center items-center overflow-x-scroll snap snap-always snap-mandatory snap-x"
       :key="type"
       ref="sliderEl"
     >
@@ -52,13 +52,13 @@
     </div>
     <div v-else class="flex justify-around items-center w-full h-12">
       <date-time
-        :model-value="customFrom"
+        v-model="customFrom"
         display-formatter="YYYY-MM-DD"
         class="text-sm buttoned rounded px-2"
       ></date-time>
       <div>-</div>
       <date-time
-        :model-value="customTo"
+        v-model="customTo"
         display-formatter="YYYY-MM-DD"
         class="text-sm buttoned rounded px-2"
       ></date-time>
@@ -71,13 +71,13 @@ import DateTime from "@/components/common/DateTime.vue";
 
 const props = withDefaults(
   defineProps<{
-    start?: string;
-    end?: string;
+    start?: string | object | Dayjs;
+    end?: string | object | Dayjs;
     date?: string;
     initialType?: "year" | "month" | "custom";
   }>(),
   {
-    start: "2000-01-01",
+    start: dayjs().format("YYYY-MM-DD"),
     end: dayjs().format("YYYY-MM-DD"),
     initialType: "month",
   }
@@ -93,8 +93,8 @@ type Time = {
 };
 
 const getYears = () => {
-  const start = dayjs(props.start).startOf("year");
-  const end = dayjs(props.end).startOf("year");
+  const start = dayjs(props.start as Dayjs).startOf("year");
+  const end = dayjs(props.end as Dayjs).startOf("year");
   const startYear = start.year();
   const endYear = end.year();
   return {
@@ -112,20 +112,20 @@ const getYears = () => {
 };
 
 const getMonths = () => {
-  const end = dayjs(props.end);
-  const start = dayjs(props.start).startOf("month");
-  const times: Time[] = [];
-  let nextS = start;
-  while (nextS.isBefore(end)) {
-    times.push({
-      name: nextS.format("YYYY-MM"),
-      range: [nextS, nextS.endOf("month")],
-    });
-    nextS = nextS.add(1, "month");
-  }
+  const end = dayjs(props.end as Dayjs).startOf("month");
+  const start = dayjs(props.start as Dayjs).startOf("month");
+  const diff = end.diff(start, "month") + 1;
+  const months: Time[] = Array.from({ length: diff }, (_, i) => {
+    const d = start.add(i, "month");
+    const name = d.format("YYYY-MM");
+    return {
+      name,
+      range: [d, d.endOf("month")],
+    };
+  });
   return {
     type: "month",
-    times,
+    times: months as unknown as Time[],
   };
 };
 
@@ -135,7 +135,10 @@ const times = computed(() => {
   if (type.value === "year") return getYears().times;
   if (type.value === "month") return getMonths().times;
   return [
-    { name: "", range: [dayjs(props.start), dayjs(props.end)] },
+    {
+      name: "",
+      range: [dayjs(props.start as Dayjs), dayjs(props.end as Dayjs)],
+    },
   ] as Time[];
 });
 
@@ -143,7 +146,9 @@ const sliderEl = ref<HTMLDivElement>();
 
 const findNearestTime = (d?: string | Dayjs) => {
   const date = dayjs(d);
-  const index = times.value.findIndex((t) => date.isBefore(t.range[1]));
+  const index = [...times.value]
+    .reverse()
+    .findIndex((t) => date.isAfter(t.range[0]));
   return {
     index,
     time: times.value[index] ?? times.value[0],
@@ -151,8 +156,8 @@ const findNearestTime = (d?: string | Dayjs) => {
 };
 const selectedTime = ref<Time>();
 
-const customFrom = ref<Dayjs>();
-const customTo = ref<Dayjs>();
+const customFrom = ref<Dayjs>(dayjs(props.start as Dayjs));
+const customTo = ref<Dayjs>(dayjs(props.end as Dayjs));
 const setNearestTime = () => {
   const { index, time } = findNearestTime(customFrom.value);
   selectTime(time, index, false);
@@ -178,13 +183,10 @@ const selectTime = (t: Time, i: number, smooth = true) => {
       behavior: smooth ? "smooth" : undefined,
     });
   }
+  emit("change", ...selectedTime.value.range);
 };
 
 watchEffect(() => {
-  if (selectedTime.value) {
-    customFrom.value = selectedTime.value.range[0];
-    customTo.value = selectedTime.value.range[1];
-  }
   if (customFrom.value && customTo.value) {
     emit("change", customFrom.value, customTo.value);
   }

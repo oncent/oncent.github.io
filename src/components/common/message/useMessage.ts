@@ -15,7 +15,7 @@ type Message = {
 
 const messageList = ref<(Message & { id: number })[]>([]);
 
-const DEFAULT_TIMEOUT = 2000;
+const DEFAULT_TIMEOUT = 3000;
 
 export const useMessage = () => {
   return {

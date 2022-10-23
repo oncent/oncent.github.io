@@ -16,7 +16,11 @@
         />
       </div>
       <div class="mx-1">
-        <button class="buttoned shadow px-2 rounded" @click="$emit('sync')">
+        <button
+          class="buttoned shadow px-2 rounded"
+          :disabled="disabled"
+          @click="$emit('sync')"
+        >
           sync
         </button>
       </div>
@@ -36,6 +40,7 @@ defineProps<{
   name: string;
   latestUpdate?: number;
   autoSync: boolean;
+  disabled?: boolean;
 }>();
 
 defineEmits<{

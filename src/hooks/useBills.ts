@@ -34,16 +34,18 @@ export const editBill = async (billId: string, newBill: BillToEdit) => {
 
 const list = ref<Bill[]>([]);
 
-export const useBills = (filter?: Ref<BillFilter | undefined> | BillFilter) => {
-  const list = ref<Bill[]>([]);
-
+export const useBills = () => {
   liveQuery(async () => {
     const bills = db.getBillDbs();
+    console.log(bills, "initial bills");
     return mergeSortableArrays(
-      await Promise.all(bills.map((db) => db.orderBy("time").toArray())),
+      await Promise.all(
+        bills.map((db) => db.orderBy("time").reverse().toArray())
+      ),
       "time"
     );
   }).subscribe((v) => {
+    console.log(v, "db changed");
     list.value = v;
   });
 
@@ -57,7 +59,7 @@ const isTypeMatched = (bill: Bill, type?: BillType) => {
   return [BillType.Expenses, BillType.Income].includes(bill.type);
 };
 
-const isTimeMatched = (bill: Bill, start?: Dayjs, end?: Dayjs) => {
+export const isTimeMatched = (bill: Bill, start?: Dayjs, end?: Dayjs) => {
   const d = dayjs.unix(bill.time);
   if (start) {
     if (end) {

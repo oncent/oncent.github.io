@@ -57,7 +57,4 @@ export const initI18n = async () => {
   i18n.global.locale = localLanguage.value;
   document.title = t("APP_NAME");
   return i18n;
-  // console.log(locale);
-  // await switchLanguage(locale.name);
-  // return i18n;
 };
