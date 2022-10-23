@@ -6,19 +6,15 @@
       <div
         class="rounded-full bg-white border w-10 h-10 flex items-center justify-center"
       >
-        <i :class="[getCategoryById(bill.categoryId)?.icon]"></i>
+        <i :class="[category?.icon]"></i>
       </div>
       <div class="flex flex-col px-4">
         <div class="flex text-md font-semibold">
-          <div>{{ getCategoryById(bill.categoryId)?.name }}</div>
+          <div>{{ category ? $t(category.name) : "" }}</div>
         </div>
         <div class="flex text-xs">
           <div>
-            {{
-              getUserName(bill.creatorId)?.me
-                ? $t("me")
-                : getUserName(bill.creatorId)?.name ?? $t("unknown-user")
-            }}
+            {{ creator?.me ? $t("me") : creator?.name ?? $t("unknown-user") }}
           </div>
           <template v-if="bill.comment">
             <div class="px-1">|</div>
@@ -45,7 +41,11 @@ import { BillType, type Bill } from "@/data/bill";
 import { getCategoryById } from "@/data/category";
 import { getUserName } from "@/hooks/useUser";
 
-defineProps<{
-  bill: Bill; // Bill
+const props = defineProps<{
+  bill: Bill;
 }>();
+
+const category = computed(() => getCategoryById(props.bill.categoryId));
+
+const creator = computed(() => getUserName(props.bill.creatorId));
 </script>
