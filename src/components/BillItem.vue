@@ -2,13 +2,13 @@
   <div
     class="bill-item flex justify-between items-center px-4 py-4 buttoned cursor-pointer"
   >
-    <div class="flex items-center">
+    <div class="flex items-center overflow-hidden">
       <div
         class="rounded-full bg-white border w-10 h-10 flex items-center justify-center"
       >
         <i :class="[category?.icon]"></i>
       </div>
-      <div class="flex flex-col px-4">
+      <div class="flex-1 flex flex-col px-4 overflow-hidden">
         <div class="flex text-md font-semibold">
           <div>{{ category ? $t(category.name) : "" }}</div>
         </div>
@@ -18,7 +18,7 @@
           </div>
           <template v-if="bill.comment">
             <div class="px-1">|</div>
-            <div>
+            <div class="truncate">
               {{ bill.comment }}
             </div>
           </template>
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div
-      class="text-lg font-bold"
+      class="text-lg font-bold truncate flex-shrink-0 text-right"
       :class="{
         'text-red-700': bill.type === BillType.Expenses,
         'text-green-900': bill.type === BillType.Income,

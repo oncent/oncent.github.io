@@ -4,7 +4,7 @@ import router from "./router";
 import "virtual:windi.css";
 import "@/styles/main.scss";
 import { initI18n } from "./locale";
-// import { intervalAdd } from "./test/test";
+import { addTestData } from "./test/test";
 
 const app = createApp(App);
 
@@ -13,5 +13,10 @@ app.use(router);
 initI18n().then((i18n) => {
   app.use(i18n);
   app.mount("#app");
-  // intervalAdd();
 });
+
+// document.body.addEventListener("click", () => {
+//   if (confirm("add ?")) {
+//     addTestData();
+//   }
+// });

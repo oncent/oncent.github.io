@@ -60,9 +60,9 @@ export const addTestData = () => {
         id: v4(),
       } as Bill;
     };
-    Array.from({ length: 200 }, () => 0).forEach((_, i) => {
+    Array.from({ length: 3000 }, () => 0).forEach((_, i) => {
       const bill = createBill(i);
-      // add(bill);
+      addBill(bill);
     });
   }, 1000);
 };
