@@ -47,7 +47,13 @@
       </div>
     </div>
     <div class="flex justify-center">
-      <a href="https://github.com/glink25/Cent" target="_blank">Github</a>
+      <a
+        href="https://github.com/glink25/Cent"
+        target="_blank"
+        class="flex items-center hover:underline text-sm"
+        >Github
+        <div class="px-2"><i class="icon-arrow-top-right icon-xs"></i></div
+      ></a>
     </div>
   </div>
 </template>

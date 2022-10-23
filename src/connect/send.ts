@@ -38,7 +38,6 @@ export class Sender<M = any> extends EventTarget {
   ) {
     super();
     this.connection.on("data", (_data) => {
-      console.log("all data received", _data);
       const data = _data as SendData;
       switch (data.type) {
         case SendType.Data:
@@ -69,7 +68,6 @@ export class Sender<M = any> extends EventTarget {
   send(data: any) {
     return createCancelablePromise((onCancel) => {
       return new Promise<void>((res, rej) => {
-        console.log("send action", data);
         const messageId = getId();
         this.connection.send({
           type: SendType.Data,
@@ -85,7 +83,6 @@ export class Sender<M = any> extends EventTarget {
           isCanceled = true;
         });
         const rcfn = (rcdata: any) => {
-          console.log("send received", rcdata);
           if (isCanceled) {
             rej();
             return;
@@ -131,7 +128,6 @@ export class Sender<M = any> extends EventTarget {
   nextReceived<T = unknown>() {
     return new Promise<T>((res, rej) => {
       const fn = (data: any) => {
-        console.log("next recieved", data);
         if (data.type === SendType.Data) {
           res(data.data);
           this.connection.off("data", fn);

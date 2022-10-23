@@ -41,7 +41,6 @@ export const handleSync = (
         }
       })();
 
-      console.log("promise res");
       const friendInfo = allUsers.value.find(
         (u) => u.connectId === receiver.connectId
       );
@@ -59,7 +58,6 @@ export const handleSync = (
           connectId: receiver.connectId,
         });
       await db.addNewBillTable(receiver.userId, data);
-      console.log("sync ended", data);
       // cancel()
       await new Promise<void>((res) =>
         setTimeout(() => {

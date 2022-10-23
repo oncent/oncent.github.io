@@ -35,35 +35,7 @@
             :footer-height="96"
           >
             <template #default="{ item }">
-              <div
-                class="bill-item flex justify-between items-center px-4 py-4 buttoned cursor-pointer"
-                @click="show(item)"
-              >
-                <div class="flex items-center">
-                  <div
-                    class="bg-white border w-10 h-10 flex items-center justify-center"
-                  >
-                    <i :class="[getCategoryById(item.categoryId)?.icon]"></i>
-                  </div>
-                  <div class="flex flex-col px-4">
-                    <div class="flex text-md font-semibold">
-                      <div>{{ getCategoryById(item.categoryId)?.name }}</div>
-                    </div>
-                    <div class="flex text-xs">
-                      <div>
-                        {{
-                          getUserName(item.creatorId)?.name ?? "unknown user"
-                        }}
-                      </div>
-                      <template v-if="item.comment">
-                        <div class="px-1">|</div>
-                        <div>{{ item.comment }}</div>
-                      </template>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-lg font-bold">{{ item.money }}</div>
-              </div>
+              <BillItem :bill="item" @click="show(item)" />
             </template>
           </List>
         </div>
@@ -74,12 +46,11 @@
 <script setup lang="ts">
 import { isBillMatched, useBills } from "@/hooks/useBills";
 import BillFilter, { type FilterProp } from "@/components/BillFilter.vue";
-import { getCategoryById } from "@/data/category";
 import type { Bill } from "@/data/bill";
-import { getUserName } from "@/hooks/useUser";
 import Clearable from "@/components/common/Clearable.vue";
 import List from "@/components/common/List.vue";
 import { useBillInfo } from "@/hooks/useBillInfo";
+import BillItem from "../components/BillItem.vue";
 
 const { list: allBills } = useBills();
 
@@ -88,8 +59,7 @@ const list = ref<Bill[]>([]);
 const filter = ref<FilterProp>();
 
 const search = () => {
-  console.log(searchText.value, filter.value, "ff");
-  if (!searchText.value || !filter.value) {
+  if (!filter.value) {
     list.value = [];
     return;
   }

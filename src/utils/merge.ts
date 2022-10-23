@@ -51,6 +51,7 @@ export const mergeSortableArrays = <T>(arrs: T[][], sortBy: keyof T): T[] => {
     });
     pushToArr(compareArr);
   }
+  if (!indexArr[0]) return ret;
   //取出最后不需要比较的数组元素，直接拼接到ret后面
   const remainArr = arrs[indexArr[0].index].slice(indexArr[0].count);
   ret = ret.concat(remainArr);

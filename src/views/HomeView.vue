@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full p-2 overflow-y-auto">
     <div class="flex flex-wrap">
-      <div class="bg-stone-800 h-40 w-full rounded-lg m-1 sm:(flex-1) p-2">
+      <div class="bg-stone-800 h-20 w-full rounded-lg m-1 sm:(flex-1) p-2">
         <div class="flex justify-between">
           <div class="text-white">{{ $t("Today") }}</div>
           <DynamicNumber
@@ -11,9 +11,6 @@
           ></DynamicNumber>
         </div>
       </div>
-      <!-- <div
-        class="bg-stone-600 h-30 w-full rounded-lg m-1 sm:(w-[30%] h-40)"
-      ></div> -->
     </div>
     <ListView
       v-if="list.length"
@@ -32,37 +29,14 @@
           >
             <div class="ml-7 text-sm">{{ getDivideInfo(item, index) }}</div>
           </div>
-          <div
-            class="bill-item flex justify-between items-center px-4 py-4 rounded-lg buttoned cursor-pointer"
+          <BillItem
+            :bill="item"
             :class="[
               `item-${index}`,
               { animated, 'to-remove': toBeRemovedId === item.id },
             ]"
             @click="show(item)"
-          >
-            <div class="flex items-center">
-              <div
-                class="rounded-full bg-white border w-10 h-10 flex items-center justify-center"
-              >
-                <i :class="[getCategoryById(item.categoryId)?.icon]"></i>
-              </div>
-              <div class="flex flex-col px-4">
-                <div class="flex text-md font-semibold">
-                  <div>{{ $t(getCategoryById(item.categoryId)!.name) }}</div>
-                </div>
-                <div class="flex text-xs">
-                  <div>
-                    {{ getUserName(item.creatorId)?.name ?? "unknown user" }}
-                  </div>
-                  <template v-if="item.comment">
-                    <div class="px-1">|</div>
-                    <div>{{ item.comment }}</div>
-                  </template>
-                </div>
-              </div>
-            </div>
-            <div class="text-lg font-bold">{{ item.money }}</div>
-          </div>
+          />
         </div>
       </template>
       <template #footer>
@@ -80,14 +54,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getCategoryById } from "@/data/category";
 import { useBills } from "@/hooks/useBills";
 import ListView from "@/components/common/List.vue";
 import DynamicNumber from "@/components/common/DynamicNumber.vue";
 import { useBillInfo } from "@/hooks/useBillInfo";
 import dayjs from "dayjs";
 import { BillType, type Bill } from "@/data/bill";
-import { getUserName } from "@/hooks/useUser";
+import BillItem from "../components/BillItem.vue";
 const { list } = useBills();
 
 const todayBills = computed(() =>
@@ -170,7 +143,6 @@ const toBeRemovedId = ref("");
   }
   .end::before {
     content: "";
-    left: 2rem;
     z-index: -1;
     width: 10px;
     height: 10px;
@@ -178,7 +150,7 @@ const toBeRemovedId = ref("");
     border: 1px solid black;
     background-color: white;
     bottom: 0;
-    margin: 0 0.9rem;
+    margin: 0 0.8rem;
   }
   .animated:not(.to-remove) {
     animation: none !important;

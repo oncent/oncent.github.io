@@ -48,7 +48,6 @@ export class CustomDexie extends Dexie {
   constructor() {
     super("billDatabase");
     this.version(records.version).stores(this.getStoreSchemas());
-    console.log(this.bills);
   }
 
   async addNewBillTable(tableName: string, bills: Bill[]) {
@@ -74,9 +73,8 @@ export class CustomDexie extends Dexie {
     }
   }
 
-  getBillDbs() {
+  getOtherBillDbs() {
     return [
-      this.bills,
       ...this.tables.filter((db) => records.has(db.name)),
     ] as Table<Bill>[];
   }
@@ -91,13 +89,19 @@ export class CustomDexie extends Dexie {
   }
   private async upgradeBills(extraSchemas?: Record<string, string | null>) {
     const newVerno = this.verno + 1;
-    console.log("old v:", this.verno, "- new v:", newVerno);
     this.close();
+    await new Promise((res) => setTimeout(res, 500));
     this.version(newVerno)
       .stores({ ...this.getStoreSchemas(), ...extraSchemas })
       .upgrade(() => undefined);
     await this.open();
+    this.afterUpgradeFn?.();
     records.version = this.verno;
+  }
+
+  private afterUpgradeFn?: () => void;
+  afterUpgrade(fn: () => void) {
+    this.afterUpgradeFn = fn;
   }
 }
 

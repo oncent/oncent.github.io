@@ -62,5 +62,12 @@
   "connection-rejected": "连接被拒绝",
   "sync": "同步",
   "sync-success": "同步成功！",
-  "something-wrong-please-try-again": "出错了，请重试"
+  "something-wrong-please-try-again": "出错了，请重试",
+  "no": "否",
+  "yes": "是",
+  "me": "我",
+  "none": "无",
+  "early": "最早",
+  "later": "最晚",
+  "unknown-user": "未知用户"
 }

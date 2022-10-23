@@ -63,5 +63,11 @@
   "delete-user-success": "Delete user success!",
   "connection-rejected": "Connection rejected",
   "sync-success": "Sync success!",
-  "something-wrong-please-try-again": "Something wrong, Please try again"
+  "something-wrong-please-try-again": "Something wrong, Please try again",
+  "no": "No",
+  "yes": "Yes",
+  "me": "Me",
+  "none": "None",
+  "later": "later",
+  "unknown-user": "unknown user"
 }

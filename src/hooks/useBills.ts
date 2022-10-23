@@ -33,22 +33,34 @@ export const editBill = async (billId: string, newBill: BillToEdit) => {
 };
 
 const list = ref<Bill[]>([]);
-
-export const useBills = () => {
+const createObserver = () =>
   liveQuery(async () => {
-    const bills = db.getBillDbs();
-    console.log(bills, "initial bills");
-    return mergeSortableArrays(
-      await Promise.all(
+    const selfBills = await db.bills.toArray();
+    const bills = db.getOtherBillDbs();
+    const arrs = [
+      selfBills,
+      ...(await Promise.all(
         bills.map((db) => db.orderBy("time").reverse().toArray())
-      ),
-      "time"
-    );
-  }).subscribe((v) => {
-    console.log(v, "db changed");
-    list.value = v;
+      )),
+    ];
+    return mergeSortableArrays(arrs, "time");
+  }).subscribe({
+    next: (v) => {
+      list.value = v;
+    },
+    error: (err) => {
+      console.error(err);
+    },
   });
 
+let observer = createObserver();
+db.afterUpgrade(() => {
+  console.log("upgraded db");
+  observer.unsubscribe();
+  observer = createObserver();
+});
+
+export const useBills = () => {
   return {
     list,
   };
@@ -84,13 +96,12 @@ const isCateMatched = (bill: Bill, cates: string[]) => {
 };
 
 const isCommentMatched = (bill: Bill, comment?: string) => {
-  return Boolean(comment && bill.comment.includes(comment));
+  return comment ? Boolean(bill.comment.includes(comment)) : true;
 };
 export const isBillMatched = (
   bill: Bill,
   filterProp: FilterProp & { comment?: string }
 ) => {
-  console.log(filterProp, "prop");
   return (
     isTypeMatched(bill, filterProp.type) &&
     isUserMatched(bill, filterProp.users) &&

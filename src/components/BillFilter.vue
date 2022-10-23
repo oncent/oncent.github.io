@@ -164,7 +164,7 @@
                   allSelected
                     ? $t("all")
                     : selectedCategories.length === 0
-                    ? "None"
+                    ? $t("none")
                     : selectedCategories.map((c) => c.name).join(",")
                 }}
               </div>
@@ -215,6 +215,7 @@ import type { Ref } from "vue";
 import Clearable from "./common/Clearable.vue";
 import DateTime from "./common/DateTime.vue";
 import dayjs, { Dayjs } from "dayjs";
+import { t } from "@/locale";
 
 export type FilterProp = {
   start?: Dayjs;
@@ -263,11 +264,11 @@ const useLimitedMultiSelect = <T = any>(mv: Ref<T[]>, lst: Ref<T[]>) => {
 };
 
 const displayStartDateFormatter = (d: Dayjs) => {
-  if (!d.isValid()) return "early";
+  if (!d.isValid()) return t("early");
   return d.format("YYYY-MM-DD");
 };
 const displayEndDateFormatter = (d: Dayjs) => {
-  if (!d.isValid()) return "later";
+  if (!d.isValid()) return t("later");
   return d.format("YYYY-MM-DD");
 };
 const start = ref(dayjs.unix(-Infinity));

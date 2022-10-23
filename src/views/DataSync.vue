@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="pb-4">
-      <div class="pt-2">{{ $t("shared-users") }}</div>
+      <div class="p-2 pb-4">{{ $t("shared-users") }}</div>
       <div v-for="participant in participants" :key="participant.connectId">
         <SyncUser
           :name="participant.meta.name"
@@ -110,7 +110,6 @@ let cancelSyncFn: undefined | (() => void) = undefined;
 
 const syncing = ref(false);
 const syncToFriends = async (connectId: string) => {
-  console.log("friend id: ", connectId);
   const { start, cancel } = connector.connect(connectId);
   cancelSyncFn = cancel;
   syncing.value = true;

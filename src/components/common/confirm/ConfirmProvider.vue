@@ -11,13 +11,13 @@
       </div>
       <div class="w-full flex justify-end">
         <button class="buttoned shadow rounded px-2 mx-1" @click="cancel">
-          {{ controller.cancelTitle ?? "No" }}
+          {{ controller.cancelTitle ?? $t("no") }}
         </button>
         <button
           class="mx-1 bg-stone-900 text-white rounded px-2"
           @click="confirm"
         >
-          {{ controller.confirmTitle ?? "Yes" }}
+          {{ controller.confirmTitle ?? $t("yes") }}
         </button>
       </div>
     </div>
