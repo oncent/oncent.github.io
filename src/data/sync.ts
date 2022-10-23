@@ -1,6 +1,7 @@
 import { showMessage, MessageType } from "@/components/common/message";
 import type { Sender } from "@/connect";
 import { useUser } from "@/hooks/useUser";
+import { t } from "@/locale";
 import {
   createCancelablePromise,
   isCancelError,
@@ -66,12 +67,12 @@ export const handleSync = (
         }, 500)
       );
       sender.close();
-      showMessage({ type: MessageType.Success, content: "Sync success" });
+      showMessage({ type: MessageType.Success, content: t("sync-success") });
     } catch (error) {
       if (!isCancelError(error)) {
         showMessage({
           type: MessageType.Error,
-          content: "Something wrong, Please try again",
+          content: t("something-wrong-please-try-again"),
         });
       }
     }

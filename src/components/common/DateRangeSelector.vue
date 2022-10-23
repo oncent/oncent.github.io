@@ -10,7 +10,7 @@
         }"
         @click="type = 'year'"
       >
-        Year
+        {{ $t("year") }}
       </div>
       <div
         class="flex-1 flex justify-center m-1"
@@ -19,7 +19,7 @@
         }"
         @click="type = 'month'"
       >
-        Month
+        {{ $t("month") }}
       </div>
       <div
         class="flex-1 flex justify-center m-1"
@@ -28,7 +28,7 @@
         }"
         @click="type = 'custom'"
       >
-        Custom
+        {{ $t("custom") }}
       </div>
     </div>
     <div

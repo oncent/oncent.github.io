@@ -70,7 +70,7 @@ export class CustomDexie extends Dexie {
       throw new Error("invalid table name");
     if (records.has(tableName)) {
       records.delete(tableName);
-      await this.upgradeBills();
+      await this.upgradeBills({ [tableName]: null });
     }
   }
 
@@ -89,12 +89,12 @@ export class CustomDexie extends Dexie {
       ),
     };
   }
-  private async upgradeBills() {
+  private async upgradeBills(extraSchemas?: Record<string, string | null>) {
     const newVerno = this.verno + 1;
     console.log("old v:", this.verno, "- new v:", newVerno);
     this.close();
     this.version(newVerno)
-      .stores(this.getStoreSchemas())
+      .stores({ ...this.getStoreSchemas(), ...extraSchemas })
       .upgrade(() => undefined);
     await this.open();
     records.version = this.verno;

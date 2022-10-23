@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col divide-y">
     <div class="flex flex-col items-center py-2 pb-4">
-      <div class="py-2">Your code:</div>
+      <div class="py-2">{{ $t("your-code") }}</div>
       <div class="flex justify-center">
         <div class="allow-select px-2 bg-stone-200 rounded flex items-center">
           {{ userInfo.connectId }}
@@ -15,12 +15,13 @@
       </div>
     </div>
     <div class="pb-4">
-      <div class="pt-2">Shared users</div>
+      <div class="pt-2">{{ $t("shared-users") }}</div>
       <div v-for="participant in participants" :key="participant.connectId">
         <SyncUser
           :name="participant.meta.name"
           :latest-update="participant.latestTransferTime"
           :auto-sync="false"
+          :disabled="!ready"
           @sync="syncToFriends(participant.connectId)"
           @delete="deleteFriend(participant.meta.userId)"
         />
@@ -30,15 +31,15 @@
       <div class="w-[80%] flex pt-2">
         <input
           v-model="inputCode"
-          placeholder="Paste your friends code here"
+          :placeholder="$t('paste-your-friends-code-here')"
           class="border border-stone-600 rounded h-full mr-1 flex-1"
         />
         <button
           class="not-disabled:(bg-stone-900) text-white rounded p-1 bg-stone-200"
-          :disabled="ready"
+          :disabled="!ready"
           @click="addInputFriends"
         >
-          add friends
+          {{ $t("add-friends") }}
         </button>
       </div>
     </div>
@@ -63,6 +64,7 @@ import { deleteBillsByCreatorId } from "@/hooks/useBills";
 import { show } from "@/hooks/useGlobalConfirm";
 import { handleSync } from "@/data/sync";
 import { writeToClipboard } from "@/utils/clipboard";
+import { t } from "@/locale";
 
 type ParticipantsMeta = {
   userId: string;
@@ -82,9 +84,9 @@ connector.addEventListener("update", (ev) => {
   setMyInfo({ connectId: store.peerId });
 });
 
-const ready = ref(true);
+const ready = ref(false);
 connector.addEventListener("ready", () => {
-  ready.value = false;
+  ready.value = true;
 });
 
 onBeforeUnmount(() => {
@@ -122,7 +124,7 @@ const syncToFriends = async (connectId: string) => {
       if (isConnectionRejected(error)) {
         showMessage({
           type: MessageType.Error,
-          content: "Connection rejected",
+          content: t("connection-rejected"),
         });
       }
     }
@@ -146,18 +148,19 @@ const addInputFriends = () => {
 
 const deleteFriend = async (userId: string) => {
   await show({
-    title:
-      "Are you sure to delete? This will delete all record created by the user.",
+    title: t(
+      "are-you-sure-to-delete-this-will-delete-all-record-created-by-the-user"
+    ),
   });
   await deleteBillsByCreatorId(userId);
   await removeUserInfo(userId);
-  showMessage({ content: "delete user success!", type: MessageType.Success });
+  showMessage({ content: t("delete-user-success"), type: MessageType.Success });
 };
 
 connector.onConnection(async (info, acceptConnect, rejectConnect) => {
   try {
     await show({
-      title: `${info.name} wants to sync data with you, accepted?`,
+      title: `${info.name} ${t("wants-to-sync-data-with-you-accepted")}`,
     });
     syncing.value = true;
     const sender = await acceptConnect();
@@ -168,7 +171,7 @@ connector.onConnection(async (info, acceptConnect, rejectConnect) => {
     if (isConnectionCanceled(error)) {
       showMessage({
         type: MessageType.Warning,
-        content: "Connection was canceled",
+        content: t("connection-was-canceled"),
       });
       return;
     }
@@ -181,7 +184,7 @@ const copy = async (text: string) => {
   if (!text) return;
   await writeToClipboard(text);
   showMessage({
-    content: "Copy code successfully!",
+    content: t("copy-code-successfully"),
     type: MessageType.Success,
   });
 };
