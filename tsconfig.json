@@ -1,12 +1,13 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["*.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["*.d.ts", "src/**/*", "src/**/*.vue", "package.json"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "lib": ["ESNext", "dom","ESNext.Promise"]
+    "resolveJsonModule": true,
+    "lib": ["ESNext", "dom", "ESNext.Promise"]
   },
 
   "references": [

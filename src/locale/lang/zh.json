@@ -69,5 +69,7 @@
   "none": "无",
   "early": "最早",
   "later": "最晚",
-  "unknown-user": "未知用户"
+  "unknown-user": "未知用户",
+  "version": "版本",
+  "help_link": "https://github.com/glink25/Cent/docs/Help_zh.md"
 }

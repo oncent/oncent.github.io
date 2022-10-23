@@ -38,11 +38,22 @@
         </div>
       </div>
       <div class="py-4 px-2 buttoned">
-        <div class="flex items-center">
+        <a class="flex items-center" :href="$t('help_link')" target="_blank">
           <div class="w-9 flex items-center justify-center">
             <i class="icon-bot"></i>
           </div>
           <div class="px-1">{{ $t("help") }}</div>
+        </a>
+      </div>
+      <div class="py-4 px-2 buttoned flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="w-9 flex items-center justify-center">
+            <i class="icon-code"></i>
+          </div>
+          <div class="px-1">{{ $t("version") }}</div>
+        </div>
+        <div>
+          <span>{{ version }}</span>
         </div>
       </div>
     </div>
@@ -87,4 +98,6 @@ const langList = computed(() =>
 watch(selectedLanguage, (v) => {
   if (v?.id) switchLanguage(v.id);
 });
+
+const version = __APP_VERSION__;
 </script>

@@ -69,5 +69,7 @@
   "me": "Me",
   "none": "None",
   "later": "later",
-  "unknown-user": "unknown user"
+  "unknown-user": "unknown user",
+  "version": "Version",
+  "help_link": "https://github.com/glink25/Cent/docs/Help_en.md"
 }
