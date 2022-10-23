@@ -30,7 +30,7 @@
             <div class="ml-7 text-sm">{{ getDivideInfo(item, index) }}</div>
           </div>
           <BillItem
-            :bill="item"
+            :bill="(item as Bill)"
             :class="[
               `item-${index}`,
               { animated, 'to-remove': toBeRemovedId === item.id },

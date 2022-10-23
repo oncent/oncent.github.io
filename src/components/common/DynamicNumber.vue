@@ -27,7 +27,9 @@ const createAnimation = (from: number, to: number) => {
     to,
     props.duration,
     (v) => {
-      selfValue.value = v.toFixed(props.toFixed);
+      selfValue.value = `${v > 0 ? "+" : "-"} ${Math.abs(v).toFixed(
+        props.toFixed
+      )}`;
     },
     Quart.easeOut
   );
@@ -35,7 +37,10 @@ const createAnimation = (from: number, to: number) => {
 
 const updateAnimation = () => {
   animation.value?.stop();
-  animation.value = createAnimation(Number(selfValue.value), props.value);
+  animation.value = createAnimation(
+    Number(selfValue.value.replace(" ", "")),
+    props.value
+  );
   animation.value.start();
 };
 

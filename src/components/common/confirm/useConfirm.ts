@@ -1,14 +1,6 @@
 import { ref } from "vue";
 
-export type Controller = {
-  visible: boolean;
-  icon?: string;
-  title: string;
-  confirmTitle?: string;
-  cancelTitle?: string;
-  hideCancelButton?: boolean;
-  close: (isConfirm: boolean) => void;
-};
+import type { Controller } from "./ConfirmProvider.vue";
 
 export type Confirm = ({
   icon,
@@ -18,21 +10,22 @@ export type Confirm = ({
   hideCancelButton,
 }: Omit<Controller, "close" | "visible">) => Promise<void>;
 
+const defaultController = () => ({
+  visible: false,
+  icon: "dialog-question",
+  title: "",
+  cancelTitle: undefined,
+  confirmTitle: undefined,
+  hideCancelButton: false,
+  close: () => undefined,
+});
+
 export const useConfirm = () => {
-  const defaultController = {
-    visible: false,
-    icon: "dialog-question",
-    title: "",
-    cancelTitle: "No",
-    confirmTitle: "Yes",
-    hideCancelButton: false,
-    close: () => undefined,
-  };
-  const controller = ref<Controller>(defaultController);
+  const controller = ref<Controller>(defaultController());
   const show = (params: Partial<Omit<Controller, "close" | "visible">>) =>
     new Promise<void>((res, rej) => {
       controller.value = {
-        ...defaultController,
+        ...defaultController(),
         ...params,
         visible: true,
         close: (isConfirm: boolean) => {

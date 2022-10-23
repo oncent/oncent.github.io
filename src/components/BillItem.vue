@@ -22,20 +22,30 @@
           </div>
           <template v-if="bill.comment">
             <div class="px-1">|</div>
-            <div>{{ bill.comment }}</div>
+            <div>
+              {{ bill.comment }}
+            </div>
           </template>
         </div>
       </div>
     </div>
-    <div class="text-lg font-bold">{{ bill.money }}</div>
+    <div
+      class="text-lg font-bold"
+      :class="{
+        'text-red-700': bill.type === BillType.Expenses,
+        'text-green-900': bill.type === BillType.Income,
+      }"
+    >
+      {{ bill.money }}
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
-// import type { Bill } from "@/data/bill";
+import { BillType, type Bill } from "@/data/bill";
 import { getCategoryById } from "@/data/category";
 import { getUserName } from "@/hooks/useUser";
 
 defineProps<{
-  bill: any; // Bill
+  bill: Bill; // Bill
 }>();
 </script>

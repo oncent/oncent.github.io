@@ -35,7 +35,7 @@
             :footer-height="96"
           >
             <template #default="{ item }">
-              <BillItem :bill="item" @click="show(item)" />
+              <BillItem :bill="(item as Bill)" @click="show(item)" />
             </template>
           </List>
         </div>

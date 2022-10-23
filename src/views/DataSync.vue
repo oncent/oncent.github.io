@@ -3,7 +3,9 @@
     <div class="flex flex-col items-center py-2 pb-4">
       <div class="py-2">{{ $t("your-code") }}</div>
       <div class="flex justify-center">
-        <div class="allow-select px-2 bg-stone-200 rounded flex items-center">
+        <div
+          class="allow-select px-2 bg-stone-200 rounded flex items-center text-center text-stone-800"
+        >
           {{ userInfo.connectId }}
         </div>
         <button
@@ -16,7 +18,11 @@
     </div>
     <div class="pb-4">
       <div class="p-2 pb-4">{{ $t("shared-users") }}</div>
-      <div v-for="participant in participants" :key="participant.connectId">
+      <div
+        v-for="participant in participants"
+        :key="participant.connectId"
+        class="px-2"
+      >
         <SyncUser
           :name="participant.meta.name"
           :latest-update="participant.latestTransferTime"
@@ -32,10 +38,10 @@
         <input
           v-model="inputCode"
           :placeholder="$t('paste-your-friends-code-here')"
-          class="border border-stone-600 rounded h-full mr-1 flex-1"
+          class="border border-stone-600 rounded h-full mr-1 flex-1 px-1"
         />
         <button
-          class="not-disabled:(bg-stone-900) text-white rounded p-1 bg-stone-200"
+          class="not-disabled:(bg-stone-900) text-white rounded px-2 py-1 bg-stone-200"
           :disabled="!ready"
           @click="addInputFriends"
         >

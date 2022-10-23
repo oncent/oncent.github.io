@@ -7,7 +7,9 @@
         </div>
         <div class="px-2">{{ $t("syncing") }}</div>
       </div>
-      <button class="buttoned" @click="cancel">{{ $t("cancel") }}</button>
+      <button class="buttoned px-4 py-2 rounded" @click="cancel">
+        {{ $t("cancel") }}
+      </button>
     </div>
   </Dialog>
 </template>
