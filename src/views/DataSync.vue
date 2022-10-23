@@ -4,12 +4,12 @@
       <div class="py-2">{{ $t("your-code") }}</div>
       <div class="flex justify-center">
         <div
-          class="allow-select px-2 bg-stone-200 rounded flex items-center text-center text-stone-800"
+          class="allow-select ml-2 px-2 bg-stone-200 rounded flex items-center text-center text-sm text-stone-800"
         >
           {{ userInfo.connectId }}
         </div>
         <button
-          class="buttoned rounded mx-2 px-4 py-2"
+          class="buttoned rounded mx-1 px-4 py-2"
           @click="copy(userInfo.connectId)"
         >
           <i class="icon-copy"></i>
@@ -34,11 +34,11 @@
       </div>
     </div>
     <div class="flex justify-center py-2">
-      <div class="w-[80%] flex pt-2">
+      <div class="md:w-[80%] flex pt-2">
         <input
           v-model="inputCode"
           :placeholder="$t('paste-your-friends-code-here')"
-          class="border border-stone-600 rounded h-full mr-1 flex-1 px-1"
+          class="border border-stone-600 rounded h-full px-1 mr-1 flex-1"
         />
         <button
           class="not-disabled:(bg-stone-900) text-white rounded px-2 py-1 bg-stone-200"
