@@ -4,39 +4,23 @@
       <div class="bg-stone-800 h-20 w-full rounded-lg m-1 sm:(flex-1) p-2">
         <div class="flex justify-between">
           <div class="text-white">{{ $t("Today") }}</div>
-          <DynamicNumber
-            :value="todayExpense"
-            init
-            class="text-white text-4xl font-bold"
-          ></DynamicNumber>
+          <DynamicNumber :value="todayExpense" init class="text-white text-4xl font-bold"></DynamicNumber>
         </div>
       </div>
     </div>
-    <ListView
-      v-if="list.length"
-      :list="list"
-      :get-range-height="getRangeHeight"
-      :footer-height="400"
-      value-key="id"
-      class="main-bill-list mx-1"
-    >
+    <ListView v-if="list.length" :list="list" :get-range-height="getRangeHeight" :footer-height="400" value-key="id"
+      class="main-bill-list mx-1">
       <template #default="{ item, index }">
         <div>
-          <div
-            v-if="getDivideInfo(item, index)"
+          <div v-if="getDivideInfo(item, index)"
             class="divider flex justify-between items-center px-4 pt-6 pb-3 cursor-pointer"
-            :class="[`divider-${index}`, { animated }]"
-          >
+            :class="[`divider-${index}`, { animated }]">
             <div class="ml-7 text-sm">{{ getDivideInfo(item, index) }}</div>
           </div>
-          <BillItem
-            :bill="(item as Bill)"
-            :class="[
-              `item-${index}`,
-              { animated, 'to-remove': toBeRemovedId === item.id },
-            ]"
-            @click="show(item)"
-          />
+          <BillItem :bill="(item as Bill)" :class="[
+            `item-${index}`,
+            { animated, 'to-remove': toBeRemovedId === item.id },
+          ]" @click="show(item)" />
         </div>
       </template>
       <template #footer>
@@ -45,10 +29,7 @@
         </div>
       </template>
     </ListView>
-    <div
-      v-else
-      class="flex justify-center items-center text-sm text-gray-600 pt-20"
-    >
+    <div v-else class="flex justify-center items-center text-sm text-gray-600 pt-20">
       {{ $t("nothing-here-add-one-bill") }}
     </div>
   </div>
@@ -61,6 +42,7 @@ import { useBillInfo } from "@/hooks/useBillInfo";
 import dayjs from "dayjs";
 import { BillType, type Bill } from "@/data/bill";
 import BillItem from "../components/BillItem.vue";
+import { denseTime } from "@/utils/time";
 const { list } = useBills();
 
 const todayBills = computed(() =>
@@ -80,15 +62,15 @@ const todayExpense = computed(() =>
 
 const { show } = useBillInfo();
 
-const SECONDS = 24 * 60 * 60;
-
 const getDivideInfo = (current: Readonly<Bill>, index: number) => {
   const last = list.value[index - 1];
   if (!last) {
-    return dayjs.unix(current.time).format("YYYY-MM-DD");
+    return denseTime(dayjs.unix(current.time));
   }
-  if (last.time - current.time >= SECONDS) {
-    return dayjs.unix(current.time).format("YYYY-MM-DD");
+  const lastDate = dayjs.unix(last.time)
+  const currentDate = dayjs.unix(current.time)
+  if (!lastDate.isSame(currentDate, 'days')) {
+    return denseTime(currentDate)
   }
   return;
 };
@@ -99,7 +81,7 @@ const getRangeHeight = (start: number, length: number) => {
   for (let index = start; index < end; index += 1) {
     const current = list.value[index];
     const last = list.value[index - 1];
-    if (!last || last.time - current.time >= SECONDS) {
+    if (!last || !dayjs.unix(last.time).isSame(dayjs.unix(current.time), 'days')) {
       dividerCount += 1;
     }
   }
@@ -113,7 +95,7 @@ const animated = ref(false);
 onMounted(() => {
   setTimeout(() => {
     animated.value = true;
-  }, 3000);
+  }, 1000);
 });
 
 const toBeRemovedId = ref("");
@@ -127,6 +109,7 @@ const toBeRemovedId = ref("");
 <style lang="scss" scoped>
 .main-bill-list {
   position: relative;
+
   &::before {
     content: "";
     position: absolute;
@@ -138,9 +121,11 @@ const toBeRemovedId = ref("");
     z-index: -2;
     animation: fade 2s ease-in-out;
   }
+
   .end {
     animation: fade 1.5s ease-in-out;
   }
+
   .end::before {
     content: "";
     z-index: -1;
@@ -152,13 +137,16 @@ const toBeRemovedId = ref("");
     bottom: 0;
     margin: 0 0.8rem;
   }
+
   .animated:not(.to-remove) {
     animation: none !important;
     opacity: 1 !important;
   }
+
   .to-remove {
     animation: remove 0.5s ease !important;
   }
+
   .bill-item {
     @for $i from 0 through 10 {
       &.item-#{$i} {
@@ -167,6 +155,7 @@ const toBeRemovedId = ref("");
       }
     }
   }
+
   .divider {
     @for $i from 0 through 10 {
       &.divider-#{$i} {
@@ -180,6 +169,7 @@ const toBeRemovedId = ref("");
       opacity: 0;
       transform: translateY(50vh);
     }
+
     to {
       opacity: 1;
       transform: translateX(0);
@@ -190,6 +180,7 @@ const toBeRemovedId = ref("");
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -200,10 +191,34 @@ const toBeRemovedId = ref("");
       opacity: 1;
       transform: translateX(0);
     }
+
     to {
       opacity: 0;
       transform: translateX(10%);
     }
   }
+
+  // .list-enter-active,
+  // .list-leave-active {
+  //   .bill-item{
+  //     transition: all 20s ease;
+  //   }
+  // }
+
+  // .list-enter-from,
+  // .list-leave-to {
+  //   .bill-item{
+  //     opacity: 0;
+  //     transform: translateX(30px);
+  //   }
+  // }
+
+  // /* 确保将离开的元素从布局流中删除
+  //   以便能够正确地计算移动的动画。 */
+  // .list-leave-active {
+  //   .bill-item{
+  //     position: absolute;
+  //   }
+  // }
 }
 </style>

@@ -6,7 +6,7 @@
     <div class="mx-2">{{ display(dayjs(modelValue as string)) }}</div>
     <input
       type="datetime-local"
-      class="absolute top-0 left-0 w-full h-full opacity-0"
+      class="absolute top-0 left-0 w-2 h-full opacity-0"
       @click="onClickInput"
       @change="onTimeChange"
     />

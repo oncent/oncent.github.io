@@ -26,12 +26,12 @@
           <div class="px-1">{{ $t("language") }}</div>
         </div>
         <div>
-          <Select v-model="selectedLanguage" :list="langList" value-key="id">
+          <Select v-model="currentLanguage" :list="langList" value-key="id">
             <template #default>
               <div
                 class="shadow buttoned w-120px rounded-sm h-full truncate text-center"
               >
-                {{ selectedLanguage?.name }}
+                {{ currentLanguage?.name }}
               </div>
             </template>
           </Select>
@@ -63,7 +63,7 @@
         target="_blank"
         class="flex items-center hover:underline text-sm"
         >Github
-        <div class="px-2"><i class="icon-arrow-top-right icon-xs"></i></div
+        <div class="px-2 py-1"><i class="icon-arrow-top-right icon-xs"></i></div
       ></a>
     </div>
   </div>
@@ -72,7 +72,7 @@
 import { useUser } from "@/hooks/useUser";
 import UserAvatar from "@/components/UserAvatar.vue";
 import Select from "@/components/common/Select.vue";
-import { locales, localLanguage, switchLanguage } from "@/locale";
+import { locales, currentLanguage, switchLanguage } from "@/locale";
 
 const { userInfo } = useUser();
 
@@ -80,22 +80,11 @@ const updateName = (v: string) => {
   userInfo.value = { ...userInfo.value, name: v };
 };
 
-const selectedLanguage = computed({
-  get: () => {
-    const initialLang = locales.find((l) => l.name === localLanguage.value);
-    return initialLang
-      ? { name: initialLang.label, id: initialLang.name }
-      : undefined;
-  },
-  set: (v) => {
-    localLanguage.value = v?.id;
-  },
-});
 const langList = computed(() =>
   locales.map((l) => ({ name: l.label, id: l.name }))
 );
 
-watch(selectedLanguage, (v) => {
+watch(currentLanguage, (v) => {
   if (v?.id) switchLanguage(v.id);
 });
 

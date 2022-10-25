@@ -5,9 +5,9 @@
     custom-class="bill-info-dialog"
     @update:visible="(v) => controller.set('visible', v)"
   >
-    <div v-if="controller.info" class="p-4 flex flex-col w-full h-full">
-      <div class="flex-1">
-        <div class="flex-1 flex items-center justify-between">
+    <div v-if="controller.info" class="min-h-[300px] p-4 flex flex-col w-full h-full">
+      <div class="flex-1 flex flex-col">
+        <div class="flex items-center justify-between">
           <div class="flex items-center">
             <div class="rounded-full bg-white border p-4">
               <i
@@ -43,6 +43,9 @@
             <div>{{ $t("time") }}:</div>
             <div>{{ formatTime(controller.info.time) }}</div>
           </div>
+        </div>
+        <div v-if="controller.info.image" class="flex-1 py-2 flex items-center justify-center">
+          <img :src="blobToUrl(controller.info.image)" alt="" class="object-contain rounded">
         </div>
       </div>
       <div class="footer flex justify-between items-center">
@@ -95,7 +98,7 @@ const emit = defineEmits<{
   (name: "edit", value: Bill): void;
 }>();
 
-const formatTime = (t: number) => dayjs.unix(t).format("YYYY-MM-DD hh:mm");
+const formatTime = (t: number) => dayjs.unix(t).format("YYYY-MM-DD HH:mm");
 
 const { allUsers, userInfo } = useUser();
 const userName = computed(
@@ -124,11 +127,15 @@ const toEdit = () => {
   }
   close();
 };
+
+const blobToUrl=(blob:Blob|ArrayBuffer)=>{
+  return URL.createObjectURL(new Blob([blob]))
+}
 </script>
 <style lang="scss">
 .bill-info-dialog {
   .dialog-body {
-    @apply w-[90%] h-[300px] max-w-[400px];
+    @apply w-[90%] max-w-[400px];
   }
 }
 </style>

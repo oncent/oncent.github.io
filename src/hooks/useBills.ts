@@ -35,7 +35,7 @@ export const editBill = async (billId: string, newBill: BillToEdit) => {
 const list = ref<Bill[]>([]);
 const createObserver = () =>
   liveQuery(async () => {
-    const selfBills = await db.bills.toArray();
+    const selfBills = await db.bills.orderBy("time").reverse().toArray();
     const bills = db.getOtherBillDbs();
     const arrs = [
       selfBills,

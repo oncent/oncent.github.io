@@ -17,7 +17,7 @@ export type Bill = {
   comment: string;
   money: number;
   time: number;
-  image?: string;
+  image?: Blob|ArrayBuffer;
   location?: string;
   id: string;
   creatorId: string;

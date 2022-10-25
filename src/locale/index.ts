@@ -34,6 +34,19 @@ export const i18n = createI18n({
 
 export const { t } = i18n.global;
 
+export const currentLanguage = computed({
+  get: () => {
+    const initialLang = locales.find((l) => l.name === localLanguage.value);
+    return initialLang
+      ? { name: initialLang.label, id: initialLang.name }
+      : undefined;
+  },
+  set: (v) => {
+    if (!v) return
+    localLanguage.value = v?.id;
+  },
+});
+
 export const switchLanguage = async (name: string) => {
   if (i18n) {
     const locale = locales.find((l) => l.name === name);

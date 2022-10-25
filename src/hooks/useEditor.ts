@@ -1,7 +1,8 @@
 import { MessageType, showMessage } from "@/components/common/message";
 import { BillType, type Bill } from "@/data/bill";
 import { BillCategories } from "@/data/category";
-import dayjs from "dayjs";
+import { showFilePicker, FORMAT_IMAGE_SUPPORTED } from "@/utils/file";
+import dayjs, { Dayjs } from "dayjs";
 import type { Router } from "vue-router";
 import { addBill, editBill } from "./useBills";
 
@@ -27,7 +28,7 @@ export const clear = () => {
 
 export const useEditor = (router: Router) => {
   const type = ref<BillType>(BillType.Expenses);
-  const time = ref<string>();
+  const time = ref<Dayjs>();
   const categories = computed(() =>
     BillCategories.filter((item) => item.type === type.value)
   );
@@ -39,17 +40,37 @@ export const useEditor = (router: Router) => {
     cateId.value = categories.value[0].id;
   });
 
+  const image = ref<{ url: string, file: File | Blob }>()
+  const chooseImage = async () => {
+    const [imageFile] = await showFilePicker({ accept: FORMAT_IMAGE_SUPPORTED, multiple: false })
+    const url = URL.createObjectURL(imageFile)
+    if (image.value) {
+      URL.revokeObjectURL(image.value.url)
+    }
+    image.value = {
+      url, file: imageFile
+    }
+  }
+
   if (initMode.value === "edit") {
     type.value = initBill.value?.type ?? type.value;
     time.value =
       (initBill.value?.time
-        ? dayjs.unix(initBill.value?.time).toISOString()
+        ? dayjs.unix(initBill.value?.time)
         : undefined) ?? time.value;
     cateId.value = initBill.value?.categoryId ?? cateId.value;
     result.value =
       initBill.value?.money !== undefined ? initBill.value.money : result.value;
     comment.value = initBill.value?.comment ?? comment.value;
+    if (initBill.value.image) {
+      image.value = {
+        file: initBill.value.image,
+        url: URL.createObjectURL(initBill.value.image)
+      }
+    }
   }
+
+
 
   const goBack = () => {
     router.back();
@@ -58,10 +79,11 @@ export const useEditor = (router: Router) => {
   const onConfirm = async () => {
     const getNewBill = () => ({
       type: type.value,
-      time: dayjs(time.value).unix(),
+      time: time.value.unix(),
       categoryId: cateId.value,
       money: Number(result.value),
       comment: comment.value,
+      image: image.value?.file
     });
     const newBill = getNewBill();
     if (newBill.money < 0) {
@@ -90,7 +112,9 @@ export const useEditor = (router: Router) => {
     cateId,
     comment,
     result,
+    image,
     onConfirm,
     goBack,
+    chooseImage
   };
 };
