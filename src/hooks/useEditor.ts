@@ -40,37 +40,42 @@ export const useEditor = (router: Router) => {
     cateId.value = categories.value[0].id;
   });
 
-  const image = ref<{ url: string, file: File | Blob }>()
+  const image = ref<{ url: string; file: File | Blob | ArrayBuffer }>();
   const chooseImage = async () => {
-    const [imageFile] = await showFilePicker({ accept: FORMAT_IMAGE_SUPPORTED, multiple: false })
-    const url = URL.createObjectURL(imageFile)
+    const [imageFile] = await showFilePicker({
+      accept: FORMAT_IMAGE_SUPPORTED,
+      multiple: false,
+    });
+    const url = URL.createObjectURL(imageFile);
     if (image.value) {
-      URL.revokeObjectURL(image.value.url)
+      URL.revokeObjectURL(image.value.url);
     }
     image.value = {
-      url, file: imageFile
-    }
-  }
+      url,
+      file: imageFile,
+    };
+  };
 
   if (initMode.value === "edit") {
     type.value = initBill.value?.type ?? type.value;
     time.value =
-      (initBill.value?.time
-        ? dayjs.unix(initBill.value?.time)
-        : undefined) ?? time.value;
+      (initBill.value?.time ? dayjs.unix(initBill.value?.time) : undefined) ??
+      time.value;
     cateId.value = initBill.value?.categoryId ?? cateId.value;
     result.value =
       initBill.value?.money !== undefined ? initBill.value.money : result.value;
     comment.value = initBill.value?.comment ?? comment.value;
-    if (initBill.value.image) {
+    if (initBill.value?.image) {
+      const url =
+        initBill.value.image instanceof Blob
+          ? URL.createObjectURL(initBill.value.image)
+          : URL.createObjectURL(new Blob([initBill.value.image]));
       image.value = {
         file: initBill.value.image,
-        url: URL.createObjectURL(initBill.value.image)
-      }
+        url,
+      };
     }
   }
-
-
 
   const goBack = () => {
     router.back();
@@ -79,11 +84,11 @@ export const useEditor = (router: Router) => {
   const onConfirm = async () => {
     const getNewBill = () => ({
       type: type.value,
-      time: time.value.unix(),
+      time: time.value!.unix(),
       categoryId: cateId.value,
       money: Number(result.value),
       comment: comment.value,
-      image: image.value?.file
+      image: image.value?.file,
     });
     const newBill = getNewBill();
     if (newBill.money < 0) {
@@ -115,6 +120,6 @@ export const useEditor = (router: Router) => {
     image,
     onConfirm,
     goBack,
-    chooseImage
+    chooseImage,
   };
 };

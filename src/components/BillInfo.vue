@@ -5,26 +5,33 @@
     custom-class="bill-info-dialog"
     @update:visible="(v) => controller.set('visible', v)"
   >
-    <div v-if="controller.info" class="min-h-[300px] p-4 flex flex-col w-full h-full">
+    <div
+      v-if="controller.info"
+      class="min-h-[300px] p-4 flex flex-col w-full h-full"
+    >
       <div class="flex-1 flex flex-col">
         <div class="flex items-center justify-between">
           <div class="flex items-center">
             <div class="rounded-full bg-white border p-4">
-              <i
-                class="icon-md"
-                :class="[getCategoryById(controller.info.categoryId)?.icon]"
-              ></i>
+              <i class="icon-md" :class="[categoryInfo?.icon]"></i>
             </div>
             <div class="flex text-md font-semibold mx-2">
               <div>
-                {{
-                  $t(getCategoryById(controller.info.categoryId)?.name as any)
-                }}
+                {{ $t(categoryInfo?.name as any) }}
               </div>
             </div>
           </div>
-          <div class="text-2xl font-bold overflow-x-auto">
-            {{ controller.info.money }}
+          <div
+            class="text-2xl font-bold flex overflow-x-auto"
+            :class="{
+              'text-red-700': controller.info.type === BillType.Expenses,
+              'text-green-900': controller.info.type === BillType.Income,
+            }"
+          >
+            <div>
+              {{ controller.info.type === BillType.Expenses ? "-" : "+" }}
+            </div>
+            <div>{{ controller.info.money }}</div>
           </div>
         </div>
         <div class="w-full border border-dashed my-2"></div>
@@ -44,8 +51,15 @@
             <div>{{ formatTime(controller.info.time) }}</div>
           </div>
         </div>
-        <div v-if="controller.info.image" class="flex-1 py-2 flex items-center justify-center">
-          <img :src="blobToUrl(controller.info.image)" alt="" class="object-contain rounded">
+        <div
+          v-if="controller.info.image"
+          class="flex-1 py-2 flex items-center justify-center"
+        >
+          <img
+            :src="blobToUrl(controller.info.image)"
+            alt=""
+            class="max-h-200px object-contain rounded"
+          />
         </div>
       </div>
       <div class="footer flex justify-between items-center">
@@ -76,7 +90,7 @@
 </template>
 <script lang="ts" setup>
 import CustomDialog from "@/components/common/Dialog.vue";
-import type { Bill } from "@/data/bill";
+import { BillType, type Bill } from "@/data/bill";
 import { getCategoryById } from "@/data/category";
 import { useUser } from "@/hooks/useUser";
 import { showEditor } from "@/hooks/useEditor";
@@ -99,6 +113,12 @@ const emit = defineEmits<{
 }>();
 
 const formatTime = (t: number) => dayjs.unix(t).format("YYYY-MM-DD HH:mm");
+
+const categoryInfo = computed(() =>
+  props.controller.info?.categoryId
+    ? getCategoryById(props.controller.info?.categoryId)
+    : undefined
+);
 
 const { allUsers, userInfo } = useUser();
 const userName = computed(
@@ -128,9 +148,9 @@ const toEdit = () => {
   close();
 };
 
-const blobToUrl=(blob:Blob|ArrayBuffer)=>{
-  return URL.createObjectURL(new Blob([blob]))
-}
+const blobToUrl = (blob: Blob | ArrayBuffer) => {
+  return URL.createObjectURL(new Blob([blob]));
+};
 </script>
 <style lang="scss">
 .bill-info-dialog {
