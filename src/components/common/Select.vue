@@ -1,5 +1,10 @@
 <template>
-  <Popover placement="bottom-right" offset="-1.5rem" trigger="focus">
+  <Popover
+    ref="popover"
+    placement="bottom-right"
+    offset="-1.5rem"
+    trigger="focus"
+  >
     <slot v-bind="{ allSelected }">
       <div class="shadow buttoned w-100px h-full truncate">
         {{ multiple ? modelValue.join("") : modelValue }}
@@ -22,7 +27,7 @@
             :class="{ '!bg-gray-700 text-white': allSelected }"
             @click="toggleSelectAll"
           >
-            Select All
+            {{ $t("select-all") }}
           </div>
         </slot>
         <template v-for="(item, index) in list" :key="getKey(item, index)">
@@ -78,16 +83,13 @@ const isSelected = (item: any, index: number) => {
   return getKey(props.modelValue, -1) === getKey(item, index);
 };
 
+const popover = ref<InstanceType<typeof Popover>>();
 const doSelect = (item: any, index: number) => {
-  if (!isSelected(item, index)) {
-    if (props.multiple) {
+  if (props.multiple) {
+    if (!isSelected(item, index)) {
       emit("update:modelValue", [...props.modelValue, item]);
       return;
     }
-    emit("update:modelValue", item);
-    return;
-  }
-  if (props.multiple) {
     emit(
       "update:modelValue",
       (props.modelValue as any[]).filter(
@@ -96,7 +98,8 @@ const doSelect = (item: any, index: number) => {
     );
     return;
   }
-  emit("update:modelValue", "");
+  popover.value?.blur();
+  emit("update:modelValue", item);
   return;
 };
 

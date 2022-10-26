@@ -33,10 +33,12 @@ export const addRandomTestData = () => {
         id: v4(),
       } as Bill;
     };
-    Array.from({ length: 200 }, () => 0).forEach((_, i) => {
+    Promise.all(Array.from({ length: 3000 }, () => 0).map((_, i) => {
       const bill = createBill(i);
-      addBill(bill);
-    });
+      return addBill(bill);
+    })).then(()=>{
+      console.log('test data add success')
+    })
   }, 1000);
 };
 
@@ -60,10 +62,12 @@ export const addTestData = () => {
         id: v4(),
       } as Bill;
     };
-    Array.from({ length: 3000 }, () => 0).forEach((_, i) => {
+    Promise.all(Array.from({ length: 3000 }, () => 0).map((_, i) => {
       const bill = createBill(i);
-      addBill(bill);
-    });
+      return addBill(bill);
+    })).then(()=>{
+      console.log('test data add success')
+    })
   }, 1000);
 };
 

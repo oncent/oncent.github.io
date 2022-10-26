@@ -1,5 +1,5 @@
 <template>
-  <div class="popover" :class="`trigger-${trigger}`" tabindex="0">
+  <div ref="el" class="popover" :class="`trigger-${trigger}`" tabindex="0">
     <slot></slot>
     <div class="popover-overlay" :class="[placement]">
       <slot name="overlay"></slot>
@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 withDefaults(
   defineProps<{
-    trigger?: "hover" | "focus";
+    trigger?: "hover" | "focus" | "focus-within";
     placement?: "bottom-left" | "bottom" | "bottom-right";
     delay?: string;
     offset?: string;
@@ -21,6 +21,19 @@ withDefaults(
     offset: "0px",
   }
 );
+
+const el = ref<HTMLDivElement>();
+const show = () => {
+  el.value?.focus();
+};
+const blur = () => {
+  el.value?.blur();
+};
+
+defineExpose({
+  show,
+  blur,
+});
 </script>
 <style lang="scss" scoped>
 .popover {
@@ -87,6 +100,16 @@ withDefaults(
     }
   }
   &.trigger-focus {
+    .popover-overlay {
+      @include hidden();
+    }
+    &:focus {
+      .popover-overlay {
+        @include visible();
+      }
+    }
+  }
+  &.trigger-focus-within {
     .popover-overlay {
       @include hidden();
     }

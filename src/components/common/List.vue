@@ -1,15 +1,20 @@
 <template>
   <div :style="renderInfo.style" class="list-view overflow-hidden" ref="listEl">
-    <TransitionGroup :name="currentTransitionName" :duration="transitionDuration" @after-leave="afterTransition">
-      <template v-for="(item, index) in renderInfo.list" :key="getKey(item, getRealIndex(index))">
-        <slot v-bind="{
+    <!-- <TransitionGroup :name="currentTransitionName" :duration="transitionDuration" @after-leave="afterTransition"> -->
+    <template
+      v-for="(item, index) in renderInfo.list"
+      :key="getKey(item, getRealIndex(index))"
+    >
+      <slot
+        v-bind="{
           item,
           index: getRealIndex(index),
-        }">
-          <div>{{ item }}</div>
-        </slot>
-      </template>
-    </TransitionGroup>
+        }"
+      >
+        <div>{{ item }}</div>
+      </slot>
+    </template>
+    <!-- </TransitionGroup> -->
     <slot name="footer"></slot>
   </div>
 </template>
@@ -23,8 +28,8 @@ const props = withDefaults(
     getRangeHeight: (start: number, length: number) => number;
     remain?: number;
     footerHeight?: number;
-    transitionName?: string
-    transitionDuration?: number
+    transitionName?: string;
+    transitionDuration?: number;
   }>(),
   {
     remain: 20,
@@ -120,11 +125,14 @@ onMounted(() => {
   });
 });
 
-const currentTransitionName = ref<string>()
-watch(() => props.list.length, () => {
-  currentTransitionName.value = props.transitionName
-})
+const currentTransitionName = ref<string>();
+watch(
+  () => props.list.length,
+  () => {
+    currentTransitionName.value = props.transitionName;
+  }
+);
 const afterTransition = () => {
-  currentTransitionName.value = undefined
-}
+  currentTransitionName.value = undefined;
+};
 </script>

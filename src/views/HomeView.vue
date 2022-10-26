@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full p-2 overflow-y-auto">
+  <div class="w-full h-full p-2 flex flex-col overflow-hidden">
     <div class="flex flex-wrap">
       <div class="bg-stone-800 h-20 w-full rounded-lg m-1 sm:(flex-1) p-2">
         <div class="flex justify-between">
@@ -8,27 +8,29 @@
         </div>
       </div>
     </div>
-    <ListView v-if="list.length" :list="list" :get-range-height="getRangeHeight" :footer-height="400" value-key="id"
-      class="main-bill-list mx-1">
-      <template #default="{ item, index }">
-        <div>
-          <div v-if="getDivideInfo(item, index)"
-            class="divider flex justify-between items-center px-4 pt-6 pb-3 cursor-pointer"
-            :class="[`divider-${index}`, { animated }]">
-            <div class="ml-7 text-sm">{{ getDivideInfo(item, index) }}</div>
+    <div v-if="list.length" class="flex-1 overflow-y-auto">
+      <ListView :list="list" :get-range-height="getRangeHeight" :footer-height="400" value-key="id"
+        class="main-bill-list mx-1">
+        <template #default="{ item, index }">
+          <div>
+            <div v-if="getDivideInfo(item, index)"
+              class="divider flex justify-between items-center px-4 pt-6 pb-3 cursor-pointer"
+              :class="[`divider-${index}`, { animated }]" @click="scrollToTop(index)">
+              <div class="ml-7 text-sm">{{ getDivideInfo(item, index) }}</div>
+            </div>
+            <BillItem :bill="(item as Bill)" :class="[
+              `item-${index}`,
+              { animated, 'to-remove': toBeRemovedId === item.id },
+            ]" @click="show(item)" />
           </div>
-          <BillItem :bill="(item as Bill)" :class="[
-            `item-${index}`,
-            { animated, 'to-remove': toBeRemovedId === item.id },
-          ]" @click="show(item)" />
-        </div>
-      </template>
-      <template #footer>
-        <div class="h-24 px-4 mt-4">
-          <div class="end flex items-center text-sm">{{ $t("ended") }}</div>
-        </div>
-      </template>
-    </ListView>
+        </template>
+        <template #footer>
+          <div class="h-24 px-4 mt-4">
+            <div class="end flex items-center text-sm">{{ $t("ended") }}</div>
+          </div>
+        </template>
+      </ListView>
+    </div>
     <div v-else class="flex justify-center items-center text-sm text-gray-600 pt-20">
       {{ $t("nothing-here-add-one-bill") }}
     </div>
@@ -97,6 +99,10 @@ onMounted(() => {
     animated.value = true;
   }, 1000);
 });
+
+const scrollToTop = (index: number) => {
+  document.querySelector(`.divider-${index}`)?.scrollIntoView({ behavior: 'smooth' })
+}
 
 const toBeRemovedId = ref("");
 // const removeItem = (id: string) => {

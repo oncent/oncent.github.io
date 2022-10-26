@@ -165,7 +165,7 @@
                     ? $t("all")
                     : selectedCategories.length === 0
                     ? $t("none")
-                    : selectedCategories.map((c) => c.name).join(",")
+                    : selectedCategories.map((c) => $t(c.name)).join(",")
                 }}
               </div>
             </template>
@@ -179,7 +179,7 @@
                   <i :class="[item.icon]"></i>
                 </div>
                 <div class="mx-2">
-                  {{ item.name }}
+                  {{ $t(item.name) }}
                 </div>
               </div>
             </template>

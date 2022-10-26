@@ -63,7 +63,7 @@
         target="_blank"
         class="flex items-center hover:underline text-sm"
         >Github
-        <div class="px-2 py-1"><i class="icon-arrow-top-right icon-xs"></i></div
+        <div class="p-2"><i class="icon-arrow-top-right icon-xs"></i></div
       ></a>
     </div>
   </div>
