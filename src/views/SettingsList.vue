@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col justify-between flex-1">
-    <div class="divide-y">
+  <div class="flex flex-col justify-between flex-1 overflow-y-auto">
+    <div class="divide-y flex-1">
       <div class="flex justify-center pt-2 pb-4">
         <UserAvatar :name="userInfo.name" @update:name="updateName" editable />
       </div>
@@ -13,6 +13,20 @@
             <i class="icon-cloud"></i>
           </div>
           <div class="px-1">{{ $t("share-and-sync") }}</div>
+        </div>
+        <div class="flex items-center justify-center">
+          <i class="icon-chevron-right"></i>
+        </div>
+      </div>
+      <div
+        class="py-4 px-2 buttoned flex justify-between"
+        @dblclick="$router.push('/settings/backup')"
+      >
+        <div class="flex items-center">
+          <div class="w-9 flex items-center justify-center">
+            <i class="icon-software-upload"></i>
+          </div>
+          <div class="px-1 beta">{{ $t("backup") }}</div>
         </div>
         <div class="flex items-center justify-center">
           <i class="icon-chevron-right"></i>
@@ -90,3 +104,12 @@ watch(currentLanguage, (v) => {
 
 const version = __APP_VERSION__;
 </script>
+<style lang="scss" scoped>
+.beta {
+  position: relative;
+  &::after {
+    content: "beta";
+    @apply rounded text-white bg-stone-900 absolute left-[100%] top-0 text-xs px-1;
+  }
+}
+</style>

@@ -5,9 +5,11 @@
         <i class="w-10 icon-close buttoned p-2" @click="cancel" />
       </div>
       <div class="flex-1 flex pb-2 mb-4">
-        <div class="font-bold flex-1 pl-2 flex items-center">
-          {{ controller.title }}
-        </div>
+        <slot>
+          <div class="font-bold flex-1 pl-2 flex items-center">
+            {{ controller.title }}
+          </div>
+        </slot>
       </div>
       <div class="w-full flex justify-end">
         <button class="buttoned shadow rounded px-2 mx-1 px-4" @click="cancel">

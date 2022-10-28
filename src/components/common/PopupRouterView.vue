@@ -7,7 +7,7 @@
       @click.stop="onClickModel"
     ></div>
     <div
-      class="popup-view-body z-1 w-screen h-screen sm:(max-w-[550px] max-h-[550px] min-w-[400px] min-h-[400px] w-[60%] h-[50%] top-auto left-auto rounded-lg) bg-[white]"
+      class="popup-view-body flex z-1 w-screen h-screen sm:(max-w-[550px] min-w-[400px] w-[60%] h-[55%] top-auto left-auto rounded-lg) bg-[white]"
       :class="bodyClass"
     >
       <slot></slot>

@@ -4,7 +4,7 @@ const goBack = () => router.back();
 </script>
 
 <template>
-  <div class="flex flex-col p-2 h-full overflow-hidden">
+  <div class="flex-1 flex flex-col p-2 overflow-hidden">
     <div class="header flex justify-center items-center relative">
       <div
         class="absolute left-0 flex buttoned rounded-full py-1 pl-1 pr-3"

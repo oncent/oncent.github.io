@@ -1,6 +1,6 @@
 {
   "name": "cent",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "postinstall": "cp ./patch/peerjs.min.js ./node_modules/peerjs/dist/peerjs.min.js",
     "dev": "vite --host",
@@ -14,6 +14,7 @@
     "@vueuse/core": "^9.2.0",
     "dayjs": "^1.11.5",
     "dexie": "^3.2.2",
+    "dexie-export-import": "^1.0.3",
     "echarts": "^5.4.0",
     "lodash-es": "^4.17.21",
     "peerjs": "^1.4.7",

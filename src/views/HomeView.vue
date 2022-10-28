@@ -1,27 +1,47 @@
 <template>
   <div class="w-full h-full p-2 flex flex-col overflow-hidden">
     <div class="flex flex-wrap">
-      <div class="bg-stone-800 h-20 w-full rounded-lg m-1 sm:(flex-1) p-2">
+      <div
+        class="bg-stone-800 h-20 w-full rounded-lg m-1 sm:(flex-1) p-2"
+        @click="scrollToToday"
+      >
         <div class="flex justify-between">
           <div class="text-white">{{ $t("Today") }}</div>
-          <DynamicNumber :value="todayExpense" init class="text-white text-4xl font-bold"></DynamicNumber>
+          <DynamicNumber
+            :value="todayExpense"
+            init
+            class="text-white text-4xl font-bold"
+          ></DynamicNumber>
         </div>
       </div>
     </div>
     <div v-if="list.length" class="flex-1 overflow-y-auto">
-      <ListView :list="list" :get-range-height="getRangeHeight" :footer-height="400" value-key="id"
-        class="main-bill-list mx-1">
+      <ListView
+        ref="listView"
+        :list="list"
+        :get-range-height="getRangeHeight"
+        :footer-height="400"
+        value-key="id"
+        class="main-bill-list mx-1"
+      >
         <template #default="{ item, index }">
           <div>
-            <div v-if="getDivideInfo(item, index)"
+            <div
+              v-if="getDivideInfo(item, index)"
               class="divider flex justify-between items-center px-4 pt-6 pb-3 cursor-pointer"
-              :class="[`divider-${index}`, { animated }]" @click="scrollToTop(index)">
+              :class="[`divider-${index}`, { animated }]"
+              @click="scrollToTop(index)"
+            >
               <div class="ml-7 text-sm">{{ getDivideInfo(item, index) }}</div>
             </div>
-            <BillItem :bill="(item as Bill)" :class="[
-              `item-${index}`,
-              { animated, 'to-remove': toBeRemovedId === item.id },
-            ]" @click="show(item)" />
+            <BillItem
+              :bill="(item as Bill)"
+              :class="[
+                `item-${index}`,
+                { animated, 'to-remove': toBeRemovedId === item.id },
+              ]"
+              @click="show(item)"
+            />
           </div>
         </template>
         <template #footer>
@@ -31,7 +51,10 @@
         </template>
       </ListView>
     </div>
-    <div v-else class="flex justify-center items-center text-sm text-gray-600 pt-20">
+    <div
+      v-else
+      class="flex justify-center items-center text-sm text-gray-600 pt-20"
+    >
       {{ $t("nothing-here-add-one-bill") }}
     </div>
   </div>
@@ -69,10 +92,10 @@ const getDivideInfo = (current: Readonly<Bill>, index: number) => {
   if (!last) {
     return denseTime(dayjs.unix(current.time));
   }
-  const lastDate = dayjs.unix(last.time)
-  const currentDate = dayjs.unix(current.time)
-  if (!lastDate.isSame(currentDate, 'days')) {
-    return denseTime(currentDate)
+  const lastDate = dayjs.unix(last.time);
+  const currentDate = dayjs.unix(current.time);
+  if (!lastDate.isSame(currentDate, "days")) {
+    return denseTime(currentDate);
   }
   return;
 };
@@ -83,7 +106,10 @@ const getRangeHeight = (start: number, length: number) => {
   for (let index = start; index < end; index += 1) {
     const current = list.value[index];
     const last = list.value[index - 1];
-    if (!last || !dayjs.unix(last.time).isSame(dayjs.unix(current.time), 'days')) {
+    if (
+      !last ||
+      !dayjs.unix(last.time).isSame(dayjs.unix(current.time), "days")
+    ) {
       dividerCount += 1;
     }
   }
@@ -91,6 +117,15 @@ const getRangeHeight = (start: number, length: number) => {
   const itemH = 72; // 4.5rem
   const itemCount = end - start;
   return dividerH * dividerCount + itemH * itemCount;
+};
+
+const getItemScrollTop = (index: number) => getRangeHeight(0, index);
+const listView = ref<InstanceType<typeof ListView>>();
+const scrollToToday = () => {
+  const index = list.value.findIndex((bill) =>
+    dayjs.unix(bill.time).isSame(dayjs(), "date")
+  );
+  listView.value?.scrollTo(getItemScrollTop(index));
 };
 
 const animated = ref(false);
@@ -101,8 +136,10 @@ onMounted(() => {
 });
 
 const scrollToTop = (index: number) => {
-  document.querySelector(`.divider-${index}`)?.scrollIntoView({ behavior: 'smooth' })
-}
+  document
+    .querySelector(`.divider-${index}`)
+    ?.scrollIntoView({ behavior: "smooth" });
+};
 
 const toBeRemovedId = ref("");
 // const removeItem = (id: string) => {

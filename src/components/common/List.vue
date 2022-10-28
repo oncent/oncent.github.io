@@ -135,4 +135,12 @@ watch(
 const afterTransition = () => {
   currentTransitionName.value = undefined;
 };
+
+const scrollTo = (top: number) => {
+  listEl.value?.parentElement?.scrollTo({ top, behavior: "smooth" });
+};
+
+defineExpose({
+  scrollTo,
+});
 </script>

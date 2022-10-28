@@ -16,6 +16,7 @@ specifiers:
   '@windicss/plugin-icons': ^1.0.2
   dayjs: ^1.11.5
   dexie: ^3.2.2
+  dexie-export-import: ^1.0.3
   echarts: ^5.4.0
   eslint: ^8.22.0
   eslint-plugin-vue: ^9.3.0
@@ -42,6 +43,7 @@ dependencies:
   '@vueuse/core': 9.3.0_vue@3.2.40
   dayjs: 1.11.5
   dexie: 3.2.2
+  dexie-export-import: 1.0.3_dexie@3.2.2
   echarts: 5.4.0
   lodash-es: 4.17.21
   peerjs: 1.4.7
@@ -2313,6 +2315,14 @@ packages:
       has-property-descriptors: 1.0.0
       object-keys: 1.1.1
     dev: true
+
+  /dexie-export-import/1.0.3_dexie@3.2.2:
+    resolution: {integrity: sha512-oun27bUUEaeOfSZ8Cv3Nvj5s0LeANYBYQ7ROpF/3Zg1X/IALUnrX0hk5ZUMlYC3s99kFHimXX57ac5AlOdMzWw==}
+    peerDependencies:
+      dexie: ^3.0.0 || ^2.0.4
+    dependencies:
+      dexie: 3.2.2
+    dev: false
 
   /dexie/3.2.2:
     resolution: {integrity: sha512-q5dC3HPmir2DERlX+toCBbHQXW5MsyrFqPFcovkH9N2S/UW/H3H5AWAB6iEOExeraAu+j+zRDG+zg/D7YhH0qg==}

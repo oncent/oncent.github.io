@@ -65,6 +65,14 @@ const router = createRouter({
             popupTitle: "share-and-sync",
           },
         },
+        {
+          path: "/settings/backup",
+          name: "backup",
+          component: () => import("@/views/BackupView.vue"),
+          meta: {
+            popupTitle: "backup",
+          },
+        },
       ],
       meta: {
         popup: true,
