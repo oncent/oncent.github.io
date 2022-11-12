@@ -143,9 +143,7 @@ onBeforeUnmount(() => {
 });
 
 const commentInputEl = ref<HTMLInputElement>();
-useAccurateChange([moneyInput, commentInputEl], () => {
-  onConfirm();
-});
+
 const onCommentKeyPress = (e: KeyboardEvent) => {
   if (e.key === "Enter") {
     onConfirm();

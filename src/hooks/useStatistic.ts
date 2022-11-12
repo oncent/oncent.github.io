@@ -50,11 +50,12 @@ export const useStatistic = (
         return umap;
       })();
       const lineMap =
-        bill.type == BillType.Expenses ? userStat.expenses : userStat.income;
+        bill.type === BillType.Expenses ? userStat.expenses : userStat.income;
       lineMap.set(date, (lineMap.get(date) ?? 0) + bill.money);
-      const pieMap = BillType.Expenses
-        ? userStat.expenseCategories
-        : userStat.incomeCategories;
+      const pieMap =
+        bill.type === BillType.Expenses
+          ? userStat.expenseCategories
+          : userStat.incomeCategories;
       pieMap.set(
         bill.categoryId,
         (pieMap.get(bill.categoryId) ?? 0) + bill.money
