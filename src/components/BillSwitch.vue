@@ -8,7 +8,7 @@
         income: modelValue === BillType.Income,
         expenses: modelValue === BillType.Expenses,
       }"
-      @click="
+      @mousedown.prevent="
         $emit(
           'update:modelValue',
           modelValue === BillType.Expenses ? BillType.Income : BillType.Expenses
