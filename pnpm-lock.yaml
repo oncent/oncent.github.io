@@ -7,6 +7,7 @@ specifiers:
   '@types/node': ^16.11.56
   '@types/uuid': ^8.3.4
   '@typescript-eslint/eslint-plugin': ^5.37.0
+  '@typescript-eslint/parser': ^5.0.0
   '@vitejs/plugin-basic-ssl': ^0.1.2
   '@vitejs/plugin-vue': ^3.0.3
   '@vue/eslint-config-prettier': ^7.0.0
@@ -58,7 +59,8 @@ devDependencies:
   '@types/lodash-es': 4.17.6
   '@types/node': 16.11.64
   '@types/uuid': 8.3.4
-  '@typescript-eslint/eslint-plugin': 5.39.0_ypn2ylkkyfa5i233caldtndbqa
+  '@typescript-eslint/eslint-plugin': 5.39.0_xyciw6oqjoiiono4dhv3uhn5my
+  '@typescript-eslint/parser': 5.39.0_ypn2ylkkyfa5i233caldtndbqa
   '@vitejs/plugin-basic-ssl': 0.1.2_vite@3.1.6
   '@vitejs/plugin-vue': 3.1.2_vite@3.1.6+vue@3.2.40
   '@vue/eslint-config-prettier': 7.0.0_uoqzb7ub56apwdxrwurswvvfwe
@@ -1592,31 +1594,6 @@ packages:
         optional: true
     dependencies:
       '@typescript-eslint/parser': 5.39.0_ypn2ylkkyfa5i233caldtndbqa
-      '@typescript-eslint/scope-manager': 5.39.0
-      '@typescript-eslint/type-utils': 5.39.0_ypn2ylkkyfa5i233caldtndbqa
-      '@typescript-eslint/utils': 5.39.0_ypn2ylkkyfa5i233caldtndbqa
-      debug: 4.3.4
-      eslint: 8.24.0
-      ignore: 5.2.0
-      regexpp: 3.2.0
-      semver: 7.3.8
-      tsutils: 3.21.0_typescript@4.8.4
-      typescript: 4.8.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@typescript-eslint/eslint-plugin/5.39.0_ypn2ylkkyfa5i233caldtndbqa:
-    resolution: {integrity: sha512-xVfKOkBm5iWMNGKQ2fwX5GVgBuHmZBO1tCRwXmY5oAIsPscfwm2UADDuNB8ZVYCtpQvJK4xpjrK7jEhcJ0zY9A==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      '@typescript-eslint/parser': ^5.0.0
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
       '@typescript-eslint/scope-manager': 5.39.0
       '@typescript-eslint/type-utils': 5.39.0_ypn2ylkkyfa5i233caldtndbqa
       '@typescript-eslint/utils': 5.39.0_ypn2ylkkyfa5i233caldtndbqa

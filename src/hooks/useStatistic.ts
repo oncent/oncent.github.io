@@ -4,6 +4,7 @@ import { t } from "@/locale";
 import { mergeMap } from "@/utils/merge";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
+import { accAdd as add } from "@/utils/math";
 import type { Ref } from "vue";
 import { isTimeMatched, useBills } from "./useBills";
 import type { User } from "./useUser";
@@ -51,14 +52,14 @@ export const useStatistic = (
       })();
       const lineMap =
         bill.type === BillType.Expenses ? userStat.expenses : userStat.income;
-      lineMap.set(date, (lineMap.get(date) ?? 0) + bill.money);
+      lineMap.set(date, add(lineMap.get(date) ?? 0, bill.money));
       const pieMap =
         bill.type === BillType.Expenses
           ? userStat.expenseCategories
           : userStat.incomeCategories;
       pieMap.set(
         bill.categoryId,
-        (pieMap.get(bill.categoryId) ?? 0) + bill.money
+        add(pieMap.get(bill.categoryId) ?? 0, bill.money)
       );
     });
     return map;

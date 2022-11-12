@@ -68,6 +68,7 @@ import dayjs from "dayjs";
 import { BillType, type Bill } from "@/data/bill";
 import BillItem from "../components/BillItem.vue";
 import { denseTime } from "@/utils/time";
+import { add } from "mathjs";
 const { list } = useBills();
 
 const todayBills = computed(() =>
@@ -80,7 +81,7 @@ const todayBills = computed(() =>
 
 const todayExpense = computed(() =>
   todayBills.value.reduce(
-    (p, c) => p + (c.type === BillType.Expenses ? -1 : 1) * c.money,
+    (p, c) => add(p, (c.type === BillType.Expenses ? -1 : 1) * c.money),
     0
   )
 );

@@ -83,6 +83,7 @@ import {
   statisticTypes,
 } from "@/hooks/useStatistic";
 import { KeepAlive } from "vue";
+import { accAdd as add } from "@/utils/math";
 
 const props = defineProps<{
   statistic: BillStatistic;
@@ -108,9 +109,9 @@ const sumPieDataset = computed(() =>
 
 const totals = computed(() => {
   return {
-    expenses: expensePieDataset.value.reduce((p, c) => p + c.total, 0),
-    income: incomePieDataset.value.reduce((p, c) => p + c.total, 0),
-    sum: sumPieDataset.value.reduce((p, c) => p + c.total, 0),
+    expenses: expensePieDataset.value.reduce((p, c) => add(p, c.total), 0),
+    income: incomePieDataset.value.reduce((p, c) => add(p, c.total), 0),
+    sum: sumPieDataset.value.reduce((p, c) => add(p, c.total), 0),
   };
 });
 
@@ -133,6 +134,10 @@ const onPieChartClick = (e: any) => {
     pieTitle.value = `${e.data.category}: ${e.data.total}`;
   }
 };
+watch(currentType, () => {
+  pieTitle.value = "";
+});
+
 const pieChartOption = computed(() => {
   const op: ECOption = {
     title: {
