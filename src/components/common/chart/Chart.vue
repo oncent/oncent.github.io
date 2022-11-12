@@ -7,6 +7,11 @@ import { echarts, type ECOption } from "./chart";
 
 const props = defineProps<{
   option: ECOption;
+  onClick?: (e: any) => void;
+}>();
+
+const emit = defineEmits<{
+  (name: "click", v: any): void;
 }>();
 const chartRef = ref<HTMLDivElement>();
 
@@ -25,6 +30,10 @@ onMounted(() => {
   });
   watch(width, () => {
     chart.resize();
+  });
+  chart.on("click", (e) => {
+    console.log(e);
+    emit("click", e);
   });
 });
 </script>

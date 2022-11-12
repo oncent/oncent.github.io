@@ -8,24 +8,22 @@
           @change="onDateRangeChange"
         ></DateRangeSelector>
       </div>
-      <div class="w-full flex flex-col items-center">
-        <Chart
-          :option="chartOption"
-          class="w-full aspect-square max-h-300px"
-        ></Chart>
+      <div>
+        <IncomeChart :statistic="statistic"></IncomeChart>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import { toRefs } from "@vueuse/core";
 import DateRangeSelector from "@/components/common/DateRangeSelector.vue";
+import IncomeChart from "@/components/IncomeChart.vue";
+
 import { BillType, type Bill } from "@/data/bill";
 import { isTimeMatched, useBills } from "@/hooks/useBills";
-import Chart from "@/components/common/chart/Chart.vue";
-import type { ECOption } from "@/components/common/chart/chart";
-import { BillCategories } from "@/data/category";
-import { t } from "@/locale";
 import dayjs, { Dayjs } from "dayjs";
+import { multiFiltered } from "@/utils/filter";
+import { useStatistic } from "@/hooks/useStatistic";
 
 const { list: bills } = useBills();
 const startDate = computed(() => {
@@ -39,28 +37,6 @@ const endDate = computed(() => {
   return undefined;
 });
 
-const transformToDataset = (list: Bill[]) => {
-  const categories = Object.fromEntries(
-    BillCategories.filter(({ type }) => type === BillType.Expenses).map(
-      (cate) => {
-        return [cate.id, { total: 0, name: t(cate.name) }];
-      }
-    )
-  );
-  list.forEach((item) => {
-    if (categories[item.categoryId]) {
-      categories[item.categoryId].total =
-        categories[item.categoryId].total + item.money;
-    }
-  });
-  return Object.entries(categories)
-    .filter(([_, { total }]) => total !== 0)
-    .map(([_, v]) => ({
-      category: v.name,
-      ...v,
-    }));
-};
-
 const rangeStart = ref<Dayjs>();
 const rangeEnd = ref<Dayjs>();
 const onDateRangeChange = (s: Dayjs, e: Dayjs) => {
@@ -68,30 +44,5 @@ const onDateRangeChange = (s: Dayjs, e: Dayjs) => {
   rangeEnd.value = e;
 };
 
-const billDataset = computed(() =>
-  transformToDataset(
-    bills.value.filter((b) =>
-      isTimeMatched(b, rangeStart.value, rangeEnd.value)
-    )
-  )
-);
-const chartOption = computed(() => {
-  const op: ECOption = {
-    dataset: {
-      dimensions: ["category", "total"],
-      source: toRaw(billDataset.value),
-    },
-    xAxis: { type: "category", show: false },
-    yAxis: {},
-    series: [
-      {
-        type: "pie",
-        radius: ["50%", "70%"],
-        stillShowZeroSum: false,
-        // label: { show: false },
-      },
-    ],
-  };
-  return op;
-});
+const statistic = useStatistic(rangeStart, rangeEnd);
 </script>

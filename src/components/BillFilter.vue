@@ -120,7 +120,7 @@
           <div class="px-2">{{ $t("users") }}:</div>
         </div>
         <div class="flex">
-          <CustomSelect
+          <Select
             v-model="selectedUsers"
             :list="allUsers"
             multiple
@@ -139,7 +139,7 @@
                 }}
               </div>
             </template>
-          </CustomSelect>
+          </Select>
         </div>
       </div>
       <div class="flex justify-between py-2">
@@ -150,7 +150,7 @@
           <div class="px-2">{{ $t("categories") }}:</div>
         </div>
         <div class="flex">
-          <CustomSelect
+          <Select
             v-model="selectedCategories"
             :list="billCategories"
             multiple
@@ -183,7 +183,7 @@
                 </div>
               </div>
             </template>
-          </CustomSelect>
+          </Select>
         </div>
       </div>
     </div>
@@ -209,7 +209,7 @@
 <script lang="ts" setup>
 import { type BillCategory, BillType } from "@/data/bill";
 import { BillCategories } from "@/data/category";
-import CustomSelect from "@/components/common/Select.vue";
+import Select from "@/components/common/Select.vue";
 import { useUser, type User } from "@/hooks/useUser";
 import type { Ref } from "vue";
 import Clearable from "./common/Clearable.vue";

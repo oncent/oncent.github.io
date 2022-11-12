@@ -12,7 +12,9 @@
       <div class="text-white">
         <bill-switch v-model="type"></bill-switch>
       </div>
-      <div class="flex-1 flex flex-col justify-center items-end bg-stone-400 rounded-lg ml-2 p-2 overflow-x-scroll">
+      <div
+        class="flex-1 flex flex-col justify-center items-end bg-stone-400 rounded-lg ml-2 p-2 overflow-x-scroll"
+      >
         <!-- <div>{{ result.text }}</div>
         <div
           class="custom-input-wrapper h-12 text-4xl font-semibold pr-1.5"
@@ -20,41 +22,68 @@
         >
           {{ result.value }}
         </div> -->
-        <input ref="moneyInput" v-model="result" v-autofocus inputmode="decimal" placeholder="0" type="number"
-          class="text-white text-4xl font-semibold focus:(border-none outline-none) text-right bg-transparent appearance-remove-all placeholder-white placeholder-opacity-50" />
+        <input
+          ref="moneyInput"
+          v-model="result"
+          v-autofocus
+          inputmode="decimal"
+          placeholder="0"
+          type="number"
+          class="text-white text-4xl font-semibold focus:(border-none outline-none) text-right bg-transparent appearance-remove-all placeholder-white placeholder-opacity-50"
+        />
       </div>
     </div>
     <div class="sm:flex-1 flex-shrink-0 min-h-100px overflow-y-auto my-2 px-2">
       <div class="flex flex-wrap justify-between">
-        <div v-for="item in categories" :key="item.id"
+        <div
+          v-for="item in categories"
+          :key="item.id"
           class="rounded-lg bg-stone-200 border text-stone-700 flex-1 py-1 px-2 my-1 mr-1 h-8 flex items-center justify-center whitespace-nowrap cursor-pointer"
-          :class="{ 'bg-gray-600 text-light-900': cateId === item.id }" @mousedown="chooseCategory($event, item.id)">
+          :class="{ 'bg-gray-600 text-light-900': cateId === item.id }"
+          @mousedown="chooseCategory($event, item.id)"
+        >
           <i class="icon-xs" :class="[item.icon]"></i>
           <div class="mx-2">{{ $t(item.name) }}</div>
         </div>
       </div>
     </div>
-    <div class="keyboard-field <sm:(flex-1) flex flex-col justify-start bg-stone-900 rounded-b-lg text-[white] p-2">
+    <div
+      class="keyboard-field <sm:(flex-1) flex flex-col justify-start bg-stone-900 rounded-b-lg text-[white] p-2"
+    >
       <div class="mb-1 flex justify-between items-center p-2">
         <div class="flex items-center">
           <div
             class="mx-1 p-2 flex justify-center items-center rounded-full transition-all hover:(bg-stone-700) active:(bg-stone-500)"
-            @click="chooseImage">
+            @click="chooseImage"
+          >
             <i v-if="!image" class="icon-xs icon-image text-[white]"></i>
-            <img v-else :src="image.url" alt="" class="w-6 h-6 object-cover rounded">
+            <img
+              v-else
+              :src="image.url"
+              alt=""
+              class="w-6 h-6 object-cover rounded"
+            />
           </div>
           <!-- <div
             class="mx-1 p-2 flex justify-center items-center rounded-full transition-all hover:(bg-stone-700) active:(bg-stone-500)">
             <i class="icon-xs icon-flag text-[white]"></i>
           </div> -->
-          <div class="p-2 rounded-full transition-all hover:(bg-stone-700) active:(bg-stone-500)">
+          <div
+            class="p-2 rounded-full transition-all hover:(bg-stone-700) active:(bg-stone-500)"
+          >
             <date-time v-model="time"></date-time>
           </div>
         </div>
         <div class="flex h-full flex-1">
-          <input ref="commentInputEl" v-model="comment" type="text"
+          <input
+            ref="commentInputEl"
+            v-model="comment"
+            type="text"
             class="w-full bg-transparent text-white text-right placeholder-opacity-50 focus:(border-none outline-none)"
-            :placeholder="$t('comment')" enterkeyhint="done" />
+            :placeholder="$t('comment')"
+            enterkeyhint="done"
+            @keypress="onCommentKeyPress"
+          />
         </div>
       </div>
       <!-- <number-pad
@@ -68,7 +97,8 @@
       ></number-pad> -->
       <button
         class="flex h-80px justify-center items-center bg-green-700 rounded-lg m-2 font-bold text-lg cursor-pointer"
-        @click="onConfirm">
+        @click="onConfirm"
+      >
         <i class="icon-check icon-md"></i>
       </button>
     </div>
@@ -80,6 +110,7 @@ import BillSwitch from "@/components/BillSwitch.vue";
 import DateTime from "@/components/common/DateTime.vue";
 import { vAutofocus } from "@/directives/autofocus";
 import { showFilePicker, FORMAT_IMAGE_SUPPORTED } from "@/utils/file";
+import { useAccurateChange } from "@/hooks/useAccurateChange";
 // import type { NumpadResult } from "@/utils/numpad";
 // import NumberPad from "@/components/common/NumberPad.vue";
 // const numpadVisible = ref(true);
@@ -88,8 +119,18 @@ import { showFilePicker, FORMAT_IMAGE_SUPPORTED } from "@/utils/file";
 // };
 
 const router = useRouter();
-const { type, time, cateId, categories, comment, result,image, onConfirm, goBack,chooseImage } =
-  useEditor(router);
+const {
+  type,
+  time,
+  cateId,
+  categories,
+  comment,
+  result,
+  image,
+  onConfirm,
+  goBack,
+  chooseImage,
+} = useEditor(router);
 
 const moneyInput = ref<HTMLInputElement>();
 const chooseCategory = (e: MouseEvent, id: string) => {
@@ -100,6 +141,16 @@ const chooseCategory = (e: MouseEvent, id: string) => {
 onBeforeUnmount(() => {
   clear();
 });
+
+const commentInputEl = ref<HTMLInputElement>();
+useAccurateChange([moneyInput, commentInputEl], () => {
+  onConfirm();
+});
+const onCommentKeyPress = (e: KeyboardEvent) => {
+  if (e.key === "Enter") {
+    onConfirm();
+  }
+};
 </script>
 <style lang="scss" scoped>
 @import "@/styles/animation.scss";

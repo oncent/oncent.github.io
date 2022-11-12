@@ -18,7 +18,7 @@
   "Medical": "Medical",
   "Education": "Education",
   "Relationship": "Relationship",
-  "Balance Account":"Balance Account",
+  "Balance Account": "Balance Account",
   "Other": "Other",
   "Wage": "Wage",
   "Part Time": "Part Time",
@@ -46,7 +46,7 @@
   "delete": "delete",
   "edit": "edit",
   "cancel": "cancel",
-  "date-today":"",
+  "date-today": "",
   "year": "Year",
   "month": "Month",
   "custom": "Custom",
@@ -75,5 +75,7 @@
   "later": "later",
   "unknown-user": "unknown user",
   "version": "Version",
-  "help_link": "https://github.com/glink25/Cent/blob/main/docs/Help_en.md"
+  "help_link": "https://github.com/glink25/Cent/blob/main/docs/Help_en.md",
+  "sum": "sum",
+  "are-you-sure-to-delete-this-bill": "Are you sure to delete this bill?"
 }

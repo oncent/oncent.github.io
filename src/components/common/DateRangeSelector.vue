@@ -123,7 +123,6 @@ const getMonths = () => {
       range: [d, d.endOf("month")],
     };
   });
-  console.log(months, "moths", diff);
   return {
     type: "month",
     times: months as unknown as Time[],
@@ -150,7 +149,6 @@ const findNearestTime = (d?: string | Dayjs) => {
   const index = [...times.value]
     .reverse()
     .findIndex((t) => date.isAfter(t.range[0]));
-  console.log(d, index, times.value, "sc");
   return {
     index,
     time: times.value[index] ?? times.value[0],
@@ -177,7 +175,6 @@ watch(type, (v) => {
 });
 
 const selectTime = (t: Time, i: number, smooth = true) => {
-  console.log(t, "t,");
   selectedTime.value = t;
   if (sliderEl.value) {
     document.querySelector(`.slider-item-${i}`)?.scrollIntoView({

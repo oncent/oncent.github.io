@@ -7,10 +7,17 @@
   </div>
 </template>
 <script lang="ts" setup>
+export type Placement =
+  | "top-left"
+  | "top"
+  | "top-right"
+  | "bottom-left"
+  | "bottom"
+  | "bottom-right";
 withDefaults(
   defineProps<{
     trigger?: "hover" | "focus" | "focus-within";
-    placement?: "bottom-left" | "bottom" | "bottom-right";
+    placement?: Placement;
     delay?: string;
     offset?: string;
   }>(),

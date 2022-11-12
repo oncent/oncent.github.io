@@ -1,7 +1,7 @@
 <template>
   <Popover
     ref="popover"
-    placement="bottom-right"
+    :placement="placement"
     offset="-1.5rem"
     trigger="focus"
   >
@@ -31,43 +31,52 @@
           </div>
         </slot>
         <template v-for="(item, index) in list" :key="getKey(item, index)">
-          <slot
-            name="option"
-            v-bind="{
-              item,
-              index,
-              select: () => doSelect(item, index),
-              selected: isSelected(item, index),
-            }"
+          <div
+            class="p-2 buttoned"
+            :class="{ '!bg-gray-700 text-white': isSelected(item, index) }"
+            @click="doSelect(item, index)"
           >
-            <div
-              class="p-2 buttoned"
-              :class="{ '!bg-gray-700 text-white': isSelected(item, index) }"
-              @click="doSelect(item, index)"
+            <slot
+              name="option"
+              v-bind="{
+                item,
+                index,
+                select: () => doSelect(item, index),
+                selected: isSelected(item, index),
+              }"
             >
-              {{ item.name }}
-            </div>
-          </slot>
+              <div>
+                {{ item.name ?? item }}
+              </div>
+            </slot>
+          </div>
         </template>
       </div>
     </template>
   </Popover>
 </template>
 <script lang="ts" setup>
-import Popover from "@/components/common/Popover.vue";
+import Popover, { type Placement } from "@/components/common/Popover.vue";
 
-const props = defineProps<{
-  list: any[];
-  modelValue: any;
-  valueKey?: string | ((v: any, i: number) => string);
-  multiple?: boolean;
-}>();
+const props = withDefaults(
+  defineProps<{
+    list: any[];
+    modelValue: any;
+    valueKey?: string | ((v: any, i: number) => string);
+    multiple?: boolean;
+    placement?: Placement;
+  }>(),
+  {
+    placement: "bottom-right",
+  }
+);
 
 const emit = defineEmits<{
   (name: "update:modelValue", value: any): void;
 }>();
 
 const getKey = (item: any, index: number) => {
+  if (typeof item === "string" || typeof item === "number") return item;
   if (props.valueKey === undefined) return index;
   if (typeof props.valueKey === "function") return props.valueKey(item, index);
   return item[props.valueKey];

@@ -1,4 +1,4 @@
-// 从大到小排序
+// 合并升序排序的多个有序数组，结果依然为从升序
 export const mergeSortableArrays = <T>(arrs: T[][], sortBy: keyof T): T[] => {
   let ret: T[] = [];
   let indexArr = arrs.map((_, index) => {
@@ -56,4 +56,16 @@ export const mergeSortableArrays = <T>(arrs: T[][], sortBy: keyof T): T[] => {
   const remainArr = arrs[indexArr[0].index].slice(indexArr[0].count);
   ret = ret.concat(remainArr);
   return ret;
+};
+
+// 合并map
+export const mergeMap = (...maps: Map<string, number>[]) => {
+  const mergedMap = new Map<string, number>();
+  [...new Set(maps.map((mp) => [...mp.keys()]).flat())].forEach((k) => {
+    mergedMap.set(
+      k,
+      maps.reduce((p, mp) => (mp.get(k) ?? 0) + p, 0)
+    );
+  });
+  return mergedMap;
 };

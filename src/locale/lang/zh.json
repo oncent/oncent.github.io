@@ -18,7 +18,7 @@
   "Medical": "医疗",
   "Education": "教育",
   "Relationship": "人情",
-  "Balance Account":"平账",
+  "Balance Account": "平账",
   "Other": "其他",
   "Wage": "工资",
   "Part Time": "兼职",
@@ -74,5 +74,7 @@
   "later": "最晚",
   "unknown-user": "未知用户",
   "version": "版本",
-  "help_link": "https://github.com/glink25/Cent/blob/main/docs/Help_zh.md"
+  "help_link": "https://github.com/glink25/Cent/blob/main/docs/Help_zh.md",
+  "sum": "结余",
+  "are-you-sure-to-delete-this-bill": "确定要删除这条记录吗？"
 }

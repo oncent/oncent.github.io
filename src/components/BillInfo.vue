@@ -96,6 +96,8 @@ import { useUser } from "@/hooks/useUser";
 import { showEditor } from "@/hooks/useEditor";
 import dayjs from "dayjs";
 import { removeBill } from "@/hooks/useBills";
+import { show } from "@/hooks/useGlobalConfirm";
+import { t } from "@/locale";
 
 export type Controller = {
   info?: Bill;
@@ -131,8 +133,9 @@ const close = () => {
   props.controller.set("visible", false);
 };
 
-const toDelete = () => {
+const toDelete = async () => {
   if (props.controller.info) {
+    await show({ title: t("are-you-sure-to-delete-this-bill") });
     removeBill(props.controller.info.id);
     emit("delete", props.controller.info.id);
   }
