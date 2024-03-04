@@ -36,7 +36,7 @@
       </template>
     </KeepAlive>
     <div class="flex items-center">
-      <Select v-model="selectedUsers" :list="allUsers" multiple value-key="id">
+      <Select v-model="selectedUsers" :list="allUsers" multiple value-key="id" placement="bottom-left">
         <template #default="{ allSelected }">
           <div
             class="shadow buttoned px-4 max-w-[160px] rounded-full h-full truncate mx-2 py-1 flex items-center"

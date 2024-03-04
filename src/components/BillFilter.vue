@@ -173,7 +173,6 @@
               <div
                 class="p-2 buttoned flex items-center"
                 :class="{ '!bg-gray-700 text-white': selected }"
-                @click="select()"
               >
                 <div class="w-8 flex justify-center">
                   <i :class="[item.icon]"></i>

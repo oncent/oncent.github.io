@@ -33,7 +33,7 @@
     </div>
     <div
       v-if="type !== 'custom'"
-      class="slider w-full h-12 flex justify-center items-center overflow-x-scroll snap snap-always snap-mandatory snap-x"
+      class="slider w-full h-12 flex items-center overflow-x-scroll snap snap-always snap-mandatory snap-x"
       :key="type"
       ref="sliderEl"
     >
