@@ -307,7 +307,7 @@ const reset = () => {
 watchEffect(() => {
   emit("update:modelValue", {
     start: start.value?.isValid() ? start.value : undefined,
-    end: end.value?.isValid() ? start.value : undefined,
+    end: end.value?.isValid() ? end.value : undefined,
     max: max.value,
     min: min.value,
     type: type.value,
