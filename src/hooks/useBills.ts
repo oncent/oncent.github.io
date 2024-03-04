@@ -1,4 +1,3 @@
-import type { FilterProp } from "@/components/BillFilter.vue";
 import { BillType, type Bill } from "@/data/bill";
 import { db } from "@/data/db";
 import { mergeSortableArrays } from "@/utils/merge";
@@ -6,8 +5,8 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { liveQuery } from "dexie";
 import { v4 } from "uuid";
-import type { Ref } from "vue";
 import { useUser } from "./useUser";
+import type { FilterProp } from "./useFilter";
 
 type BillToAdd = Omit<Bill, "id" | "creatorId">;
 
@@ -71,7 +70,7 @@ const isTypeMatched = (bill: Bill, type?: BillType) => {
   return [BillType.Expenses, BillType.Income].includes(bill.type);
 };
 
-export const isTimeMatched = (bill: Bill, start?: Dayjs, end?: Dayjs) => {
+export const isTimeMatched = (bill: Bill, start?: Dayjs | string, end?: Dayjs | string) => {
   const d = dayjs.unix(bill.time);
   if (start) {
     if (end) {
