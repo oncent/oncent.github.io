@@ -2,7 +2,7 @@
 
 This is a simple accounting PWA, which can sync data between two devices through Web RTC without server, makes it easier to share data with your friends.
 
-You can also customize and deploy it by simply fork it to your own repository. 
+You can also customize and deploy it by simply fork it to your own repository.
 
 ## Project Setup
 
