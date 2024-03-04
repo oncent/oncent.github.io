@@ -31,9 +31,9 @@
           <div @click="switchMoneySorter" class="px-4 py-2 buttoned rounded-full">
             <div v-if="moneySorter === undefined" class="icon-sort-az opacity-40">
             </div>
-            <div v-else-if="moneySorter === 'asc'" class="icon-sort-az">
+            <div v-else-if="moneySorter === 'asc'" class="icon-sort-za">
             </div>
-            <div v-else-if="moneySorter === 'desc'" class="icon-sort-za">
+            <div v-else-if="moneySorter === 'desc'" class="icon-sort-az">
             </div>
           </div>
         </div>
