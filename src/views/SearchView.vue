@@ -24,12 +24,22 @@
       </div>
       <div class="flex-1 flex flex-col overflow-hidden">
         <BillFilter v-model="filter"></BillFilter>
-        <div class="text-sm text-gray-500">
-          {{ $t("total") }}: {{ list.length }}
+        <div class="flex items-center justify-between px-2">
+          <div class="text-sm text-gray-500">
+            {{ $t("total") }}: {{ sortedList.length }}
+          </div>
+          <div @click="switchMoneySorter" class="px-4 py-2 buttoned rounded-full">
+            <div v-if="moneySorter === undefined" class="icon-sort-az opacity-40">
+            </div>
+            <div v-else-if="moneySorter === 'asc'" class="icon-sort-az">
+            </div>
+            <div v-else-if="moneySorter === 'desc'" class="icon-sort-za">
+            </div>
+          </div>
         </div>
         <div class="flex-1 divide-y overflow-y-auto">
           <List
-            :list="list"
+            :list="sortedList"
             value-key="id"
             :get-range-height="getRangeHeight"
             :footer-height="96"
@@ -51,12 +61,29 @@ import Clearable from "@/components/common/Clearable.vue";
 import List from "@/components/common/List.vue";
 import { useBillInfo } from "@/hooks/useBillInfo";
 import BillItem from "../components/BillItem.vue";
+import { orderBy } from "lodash-es";
 
 const { list: allBills } = useBills();
 
 const searchText = ref("");
 const list = ref<Bill[]>([]);
-const filter = ref<FilterProp>();
+
+const route = useRoute();
+const initialFilter = route.query.filters ? JSON.parse(route.query.filters as string) : undefined;
+const filter = ref<FilterProp>(initialFilter);
+
+const moneySorterValues = [undefined, 'asc', 'desc'] as const;
+const moneySorter = ref<typeof moneySorterValues[number]>();
+const switchMoneySorter = ()=>{
+  const index = moneySorterValues.findIndex(v=>v===moneySorter.value);
+  const nextIndex = index + 1 >= moneySorterValues.length ? 0 : index + 1;
+  moneySorter.value = moneySorterValues[nextIndex];
+}
+
+const sortedList = computed(()=>{
+  if(moneySorter.value === undefined)return list.value;
+  return orderBy(list.value, ['money'], [moneySorter.value])
+})
 
 const search = () => {
   if (!filter.value) {
@@ -68,6 +95,13 @@ const search = () => {
     isBillMatched(b, { ...fp, comment: searchText.value })
   );
 };
+
+
+onMounted(()=>{
+  if(initialFilter){
+    search();
+  };
+})
 
 const getRangeHeight = (start: number, length: number) => {
   const itemH = 72;
