@@ -77,5 +77,6 @@
   "version": "Version",
   "help_link": "https://github.com/glink25/Cent/blob/main/docs/Help_en.md",
   "sum": "sum",
-  "are-you-sure-to-delete-this-bill": "Are you sure to delete this bill?"
+  "are-you-sure-to-delete-this-bill": "Are you sure to delete this bill?",
+  "see-details": "see details"
 }

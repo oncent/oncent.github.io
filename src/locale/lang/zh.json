@@ -76,5 +76,6 @@
   "version": "版本",
   "help_link": "https://github.com/glink25/Cent/blob/main/docs/Help_zh.md",
   "sum": "结余",
-  "are-you-sure-to-delete-this-bill": "确定要删除这条记录吗？"
+  "are-you-sure-to-delete-this-bill": "确定要删除这条记录吗？",
+  "see-details": "查看详情"
 }

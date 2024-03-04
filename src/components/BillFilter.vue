@@ -219,20 +219,20 @@ import { t } from "@/locale";
 export type FilterProp = {
   start?: Dayjs;
   end?: Dayjs;
-  max: number;
-  min: number;
+  max?: number;
+  min?: number;
   type?: BillType;
   users: string[];
   categories: string[];
 };
-defineProps<{
+const props = defineProps<{
   modelValue?: FilterProp;
 }>();
 const emit = defineEmits<{
   (name: "update:modelValue", value: FilterProp): void;
 }>();
 
-const expended = ref(false);
+const expended = ref(Boolean(props.modelValue));
 const toggle = () => {
   expended.value = !expended.value;
 };
@@ -270,16 +270,16 @@ const displayEndDateFormatter = (d: Dayjs) => {
   if (!d.isValid()) return t("later");
   return d.format("YYYY-MM-DD");
 };
-const start = ref(dayjs.unix(-Infinity));
-const end = ref(dayjs.unix(Infinity));
+const start = ref(props.modelValue?.start ? dayjs(props.modelValue?.start) : dayjs.unix(-Infinity));
+const end = ref(props.modelValue?.end ? dayjs(props.modelValue?.end) : dayjs.unix(Infinity));
 
-const min = ref(-Infinity);
-const max = ref(Infinity);
+const min = ref(props.modelValue?.max ?? -Infinity);
+const max = ref(props.modelValue?.min ?? Infinity);
 
-const type = ref<BillType>();
+const type = ref<BillType | undefined>(props.modelValue?.type);
 
-const selectedUsers = ref<User[]>([]);
 const { allUsers } = useUser();
+const selectedUsers = ref<User[]>(props.modelValue?.users?.map(u => allUsers.value.find(l=>l.id===u)).filter(Boolean) as User[] ?? []);
 useLimitedMultiSelect(selectedUsers, allUsers);
 
 const selectedCategories = ref<BillCategory[]>([]);

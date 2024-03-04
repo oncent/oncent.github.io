@@ -44,12 +44,12 @@
             <i class="icon-smile-no-mouth icon-xs"></i>
             <div class="px-2">
               {{
-                allSelected
-                  ? $t("all")
-                  : selectedUsers.length === 0
-                  ? "None"
-                  : selectedUsers.map((c) => c.name).join(",")
-              }}
+          allSelected
+            ? $t("all")
+            : selectedUsers.length === 0
+              ? "None"
+              : selectedUsers.map((c) => c.name).join(",")
+        }}
             </div>
           </div>
         </template>
@@ -129,14 +129,23 @@ const pieDataset = computed(() => {
 });
 
 const pieTitle = ref("");
+const currentCategory = ref("")
 const onPieChartClick = (e: any) => {
   if (e.data) {
     pieTitle.value = `${e.data.category}: ${e.data.total}`;
+    currentCategory.value = e.data.category;
   }
 };
 watch(currentType, () => {
   pieTitle.value = "";
+  currentCategory.value = "";
 });
+
+defineExpose({
+    currentCategory,
+    currentType,
+    selectedUsers,
+  })
 
 const pieChartOption = computed(() => {
   const op: ECOption = {
