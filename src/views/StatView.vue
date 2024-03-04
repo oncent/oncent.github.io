@@ -30,6 +30,7 @@ import { isTimeMatched, useBills } from "@/hooks/useBills";
 import dayjs, { Dayjs } from "dayjs";
 import { multiFiltered } from "@/utils/filter";
 import { useStatistic } from "@/hooks/useStatistic";
+import { ExpensesBillCategories } from "@/data/category";
 
 const { list: bills } = useBills();
 const startDate = computed(() => {
@@ -61,7 +62,7 @@ const goToSearchView = () => {
       filters: JSON.stringify({
         type: currentType === 'expenses' ? BillType.Expenses : (currentType==='income' ? BillType.Income : undefined),
         users: selectedUsers?.map(u => u.id),
-        categories: currentCategory ? [currentCategory] : undefined,
+        categories: currentCategory ? [currentCategory].map(c=>ExpensesBillCategories.find(e => e.name === c)?.id) : undefined,
         start: rangeStart.value,
         end: rangeEnd.value,
       })

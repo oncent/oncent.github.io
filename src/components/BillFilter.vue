@@ -238,7 +238,9 @@ const toggle = () => {
 };
 
 const useLimitedMultiSelect = <T = any>(mv: Ref<T[]>, lst: Ref<T[]>) => {
-  mv.value = lst.value;
+  if(!mv.value.length){
+    mv.value = lst.value;
+  }
   const stop = watch(
     () => lst.value.length,
     (l) => {
@@ -282,7 +284,7 @@ const { allUsers } = useUser();
 const selectedUsers = ref<User[]>(props.modelValue?.users?.map(u => allUsers.value.find(l=>l.id===u)).filter(Boolean) as User[] ?? []);
 useLimitedMultiSelect(selectedUsers, allUsers);
 
-const selectedCategories = ref<BillCategory[]>([]);
+const selectedCategories = ref<BillCategory[]>(props.modelValue?.categories?.map(c=>BillCategories.find(e=>e.id===c)!) ?? []);
 const billCategories = computed(() =>
   BillCategories.filter(
     (item) => type.value === undefined || item.type === type.value

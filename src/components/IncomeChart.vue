@@ -35,7 +35,7 @@
         ></Chart>
       </template>
     </KeepAlive>
-    <div class="flex items-center">
+    <div class="flex w-full px-2 items-center justify-between">
       <Select v-model="selectedUsers" :list="allUsers" multiple value-key="id" placement="bottom-left">
         <template #default="{ allSelected }">
           <div
@@ -54,18 +54,20 @@
           </div>
         </template>
       </Select>
-      <Select v-model="currentType" :list="(statisticTypes as any)">
-        <div class="rounded buttoned h-full truncate flex items-center px-2">
-          <div class="pr-2">
-            <i class="icon-arrows-exchange-alt-v icon-xs"></i>
+      <div class="flex items-center">
+        <Select v-model="currentType" :list="(statisticTypes as any)">
+          <div class="rounded buttoned h-full truncate flex items-center px-2">
+            <div class="pr-2">
+              <i class="icon-arrows-exchange-alt-v icon-xs"></i>
+            </div>
+            {{ $t(currentType) }}:
           </div>
-          {{ $t(currentType) }}:
-        </div>
-        <template #option="{ item }">
-          {{ $t(item) }}
-        </template>
-      </Select>
-      <div>{{ totals[currentType] }}</div>
+          <template #option="{ item }">
+            {{ $t(item) }}
+          </template>
+        </Select>
+        <div>{{ totals[currentType] }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -133,7 +135,7 @@ const currentCategory = ref("")
 const onPieChartClick = (e: any) => {
   if (e.data) {
     pieTitle.value = `${e.data.category}: ${e.data.total}`;
-    currentCategory.value = e.data.category;
+    currentCategory.value = e.data.name;
   }
 };
 watch(currentType, () => {
