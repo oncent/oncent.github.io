@@ -17,6 +17,7 @@
     "dexie-export-import": "^1.0.3",
     "echarts": "^5.4.0",
     "lodash-es": "^4.17.21",
+    "mathjs": "^12.4.0",
     "peerjs": "^1.4.7",
     "uuid": "^9.0.0",
     "vue": "^3.2.38",
