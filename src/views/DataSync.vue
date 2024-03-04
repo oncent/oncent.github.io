@@ -21,7 +21,7 @@
       <div
         v-for="participant in participants"
         :key="participant.connectId"
-        class="px-2"
+        class="p-2"
       >
         <SyncUser
           :name="participant.meta.name"
