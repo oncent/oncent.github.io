@@ -209,7 +209,7 @@ const {
   allUsers,
   billCategories,
   reset,
-} = useFilterForm();
+} = useFilterForm(props.modelValue);
 
 watchEffect(() => {
   emit("update:modelValue", {
