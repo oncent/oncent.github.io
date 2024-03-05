@@ -109,6 +109,7 @@ const getRealIndex = (index: number) => renderInfo.value.startIndex + index;
 
 const listEl = ref<HTMLDivElement>();
 
+let ScrollTop = 0;
 const onScroll = throttle((e: Event) => {
   const parent = e.target as HTMLDivElement;
   if (!parent || !listEl.value) return;
@@ -116,10 +117,25 @@ const onScroll = throttle((e: Event) => {
   const scrollTop = parent.scrollTop - offsetTop;
 
   pageIndex.value = findRenderPage(scrollTop);
+  ScrollTop = parent.scrollTop;
 }, 50);
+
+// 支持keep alive
+onActivated(() => {
+  listEl.value?.parentElement?.addEventListener("scroll", onScroll);
+  if(listEl.value?.parentElement){
+    listEl.value.parentElement.scrollTop = ScrollTop;
+  }
+  onDeactivated(() => {
+    listEl.value?.parentElement?.removeEventListener("scroll", onScroll);
+  });
+});
 
 onMounted(() => {
   listEl.value?.parentElement?.addEventListener("scroll", onScroll);
+  if(listEl.value?.parentElement){
+    listEl.value.parentElement.scrollTop = ScrollTop;
+  }
   onBeforeUnmount(() => {
     listEl.value?.parentElement?.removeEventListener("scroll", onScroll);
   });

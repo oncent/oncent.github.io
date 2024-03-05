@@ -38,7 +38,7 @@ export default defineConfig(({ command }) => ({
     VitePWA({
       registerType: "autoUpdate",
     }),
-    basicSsl(),
+    // basicSsl(),
     splitVendorChunkPlugin(),
   ],
   resolve: {
