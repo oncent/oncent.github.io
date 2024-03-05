@@ -4,12 +4,17 @@ import { t } from "@/locale";
 import { mergeMap } from "@/utils/merge";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration"
 import { accAdd as add } from "@/utils/math";
+import { subtract } from "mathjs";
 import type { Ref } from "vue";
 import { isTimeMatched, useBills } from "./useBills";
 import type { User } from "./useUser";
 
 const { list } = useBills();
+
+dayjs.extend(duration)
+
 
 export type BillStatistic = Map<
   string,
@@ -33,10 +38,18 @@ export const useStatistic = (
   const rangedList = computed(() =>
     list.value.filter((bill) => isTimeMatched(bill, start.value, end.value))
   );
+  const formatter = computed(() => {
+    // 选择按年展示时合并月份
+    if (!start.value || !end.value) {
+      return "YYYY-MM-DD"
+    }
+    const duration = dayjs.duration(end.value.diff(start.value)).asDays()
+    return duration >= 364 ? 'YYYY-MM' : 'YYYY-MM-DD'
+  });
   const statistic = computed(() => {
     const map: BillStatistic = new Map(); //eg. "user-xxx":{expense:xxx, income:xxx, categoroes:xxx}
     rangedList.value.forEach((bill) => {
-      const date = dayjs.unix(bill.time).format("YYYY-MM-DD");
+      const date = dayjs.unix(bill.time).format(formatter.value);
       const userStat = (() => {
         if (!map.has(bill.creatorId)) {
           map.set(bill.creatorId, {
@@ -50,6 +63,8 @@ export const useStatistic = (
         const umap = map.get(bill.creatorId)!;
         return umap;
       })();
+      const sumMap = userStat.sum;
+      sumMap.set(date, bill.type === BillType.Expenses ? add(sumMap.get(date) ?? 0, bill.money) : subtract(sumMap.get(date) ?? 0, bill.money))
       const lineMap =
         bill.type === BillType.Expenses ? userStat.expenses : userStat.income;
       lineMap.set(date, add(lineMap.get(date) ?? 0, bill.money));
@@ -72,6 +87,19 @@ export const transformToPieData = (
   users: User[],
   type: StatisticType
 ) => {
+  if (type === 'sum') {
+    return users
+      .filter((u) => statistic.has(u.id))
+      .map((u) => {
+        const total = [...statistic.get(u.id)!.sum.values()].reduce((p, c) => p + c, 0)
+        return {
+          total,
+          name: u.name,
+          category: u.name,
+        };
+      })
+
+  }
   const maps = users
     .filter((u) => statistic.has(u.id))
     .map((u) => {
@@ -80,17 +108,13 @@ export const transformToPieData = (
           return statistic.get(u.id)!.expenseCategories;
         case "income":
           return statistic.get(u.id)!.incomeCategories;
-        case "sum":
-          return [
-            statistic.get(u.id)!.expenseCategories,
-            statistic.get(u.id)!.incomeCategories,
-          ];
         default:
           return statistic.get(u.id)!.expenseCategories;
       }
     })
     .flat();
   const merged = mergeMap(...maps);
+
   return [...merged.entries()].map(([k, v]) => {
     const cate = getCategoryById(k)!;
     return {
@@ -106,13 +130,13 @@ export const transformToLineData = (
   users: User[],
   type: StatisticType
 ) => {
-  const mps = users
+  const values = users
     .filter((u) => statistic.has(u.id))
-    .map((u) => statistic.get(u.id)!);
-  const dates = [...new Set(mps.map((mp) => [...mp[type].keys()]).flat())];
-  const values = mps.map((mp) => [...mp[type].values()]);
+    .map((u) => ({
+      data: [...statistic.get(u.id)![type].entries()],
+      user: u
+    }));
   return {
-    dates,
     values,
   };
 };
