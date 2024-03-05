@@ -1,46 +1,32 @@
 <template>
-  <div class="w-full flex flex-col items-center">
+  <div class="w-full px-2 flex flex-col items-center">
     <div class="flex items-center shadow-inner rounded-full p-1">
-      <div
-        class="flex justify-center items-center w-12 h-6 rounded-full"
-        :class="{ 'bg-stone-700 text-white': chartType === 'pie' }"
-        @click="chartType = 'pie'"
-      >
+      <div class="flex justify-center items-center w-12 h-6 rounded-full"
+        :class="{ 'bg-stone-700 text-white': chartType === 'pie' }" @click="chartType = 'pie'">
         <div class="transform translate-y-[-30%]">
           <i class="icon-chart icon-xs"></i>
         </div>
       </div>
-      <!-- <div
-        class="flex justify-center items-center w-12 h-6 rounded-full"
-        :class="{ 'bg-stone-700 text-white': chartType === 'line' }"
-        @click="chartType = 'line'"
-      >
+      <div class="flex justify-center items-center w-12 h-6 rounded-full"
+        :class="{ 'bg-stone-700 text-white': chartType === 'line' }" @click="chartType = 'line'">
         <div class="transform translate-y-[30%]">
           <i class="icon-trending icon-xs"></i>
         </div>
-      </div> -->
+      </div>
     </div>
     <KeepAlive>
       <template v-if="chartType === 'pie'">
-        <Chart
-          class="w-full aspect-square max-h-300px"
-          :option="pieChartOption"
-          @click="onPieChartClick"
-        ></Chart>
+        <Chart class="w-full aspect-square max-h-300px" :option="pieChartOption" @click="onPieChartClick"></Chart>
       </template>
       <template v-else>
-        <Chart
-          class="w-full aspect-square max-h-300px"
-          :option="lineChartOption"
-        ></Chart>
+        <Chart class="w-full aspect-square max-h-300px" :option="lineChartOption"></Chart>
       </template>
     </KeepAlive>
     <div class="flex w-full px-2 items-center justify-between">
       <Select v-model="selectedUsers" :list="allUsers" multiple value-key="id" placement="bottom-left">
+
         <template #default="{ allSelected }">
-          <div
-            class="shadow buttoned px-4 max-w-[160px] rounded-full h-full truncate mx-2 py-1 flex items-center"
-          >
+          <div class="shadow buttoned px-4 max-w-[160px] rounded-full h-full truncate mx-2 py-1 flex items-center">
             <i class="icon-smile-no-mouth icon-xs"></i>
             <div class="px-2">
               {{
@@ -62,6 +48,7 @@
             </div>
             {{ $t(currentType) }}:
           </div>
+
           <template #option="{ item }">
             {{ $t(item) }}
           </template>
@@ -71,6 +58,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
 import Chart from "@/components/common/chart/Chart.vue";
 import type { ECOption } from "@/components/common/chart/chart";
@@ -86,6 +74,7 @@ import {
 } from "@/hooks/useStatistic";
 import { KeepAlive } from "vue";
 import { accAdd as add } from "@/utils/math";
+import { reverse } from "lodash-es";
 
 const props = defineProps<{
   statistic: BillStatistic;
@@ -144,10 +133,10 @@ watch(currentType, () => {
 });
 
 defineExpose({
-    currentCategory,
-    currentType,
-    selectedUsers,
-  })
+  currentCategory,
+  currentType,
+  selectedUsers,
+})
 
 const pieChartOption = computed(() => {
   const op: ECOption = {
@@ -159,6 +148,9 @@ const pieChartOption = computed(() => {
     dataset: {
       dimensions: ["category", "total"],
       source: toRaw(pieDataset.value),
+    },
+    tooltip: {
+          show: true,
     },
     xAxis: { type: "category", show: false },
     yAxis: {},
@@ -179,15 +171,21 @@ const lineData = computed(() =>
 );
 const lineChartOption = computed(() => {
   const op: ECOption = {
-    xAxis: { type: "time", data: lineData.value.dates },
-    yAxis: {
-      type: "value",
+    xAxis: {
+      type: 'time',
     },
-    series: lineData.value.values.map((data) => ({
-      data,
-      type: "line",
-      stack: "x",
-    })),
+    yAxis: {
+      type: 'value'
+    },
+    tooltip: {
+          show: true,
+          formatter: '{a}: {c0}'
+    },
+    series: lineData.value.values.map(({data,user}) => ({
+      data: reverse(data),
+      type: 'line',
+      name: user.name
+    }))
   };
   return op;
 });

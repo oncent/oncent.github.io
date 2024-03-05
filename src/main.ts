@@ -4,7 +4,7 @@ import router from "./router";
 import "virtual:windi.css";
 import "@/styles/main.scss";
 import { initI18n } from "./locale";
-// import { addRandomTestData } from "./test/test";
+// import { addNewUserTestData } from "./test/test";
 
 const app = createApp(App);
 
@@ -17,6 +17,6 @@ initI18n().then((i18n) => {
 
 // document.body.addEventListener("click", () => {
 //   if (confirm("add ?")) {
-//     addRandomTestData();
+//     addNewUserTestData();
 //   }
 // });

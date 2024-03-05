@@ -36,7 +36,7 @@ export const addRandomTestData = () => {
     Promise.all(Array.from({ length: 3000 }, () => 0).map((_, i) => {
       const bill = createBill(i);
       return addBill(bill);
-    })).then(()=>{
+    })).then(() => {
       console.log('test data add success')
     })
   }, 1000);
@@ -65,7 +65,7 @@ export const addTestData = () => {
     Promise.all(Array.from({ length: 3000 }, () => 0).map((_, i) => {
       const bill = createBill(i);
       return addBill(bill);
-    })).then(()=>{
+    })).then(() => {
       console.log('test data add success')
     })
   }, 1000);
@@ -96,3 +96,38 @@ export const intervalAdd = () => {
     });
   }, 1000);
 };
+
+export const addNewUserTestData = async () => {
+  const { addUserInfo } = useUser();
+  const testUser = {
+    name: 'Bob',
+    id: 'test-id-bob',
+    connectId: 'test-connect-id-bob'
+  }
+  // await addUserInfo({
+  //   id: testUser.id,
+  //   name: testUser.name,
+  //   latestTransferTime: dayjs().unix(),
+  //   connectId: testUser.connectId,
+  // });
+  const createBill = (i: number) => {
+    const date = randomDate(new Date("2020-01-03"), new Date("2023-01-02"));
+    const type = randomItem([BillType.Expenses, BillType.Income]);
+    const cate = randomItem(BillCategories.filter((x) => x.type === type));
+    return {
+      time: (date.getTime() + i) / 1000,
+      name: `Test-${date.toLocaleString()}`,
+      categoryId: cate.id,
+      creatorId: testUser.id,
+      type,
+      comment: `test comment ${date.toLocaleString()}`,
+      money: i,
+      id: v4(),
+    } as Bill;
+  };
+  const testData = (Array.from({ length: 3000 }, () => 0).map((_, i) => {
+    const bill = createBill(i);
+    return bill
+  }))
+  await db.addNewBillTable(testUser.id, testData);
+}
