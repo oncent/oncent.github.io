@@ -1,18 +1,20 @@
 import type { Ref } from "vue";
 
 export const useLimitedMultiSelect = <T = any>(mv: Ref<T[]>, lst: Ref<T[]>) => {
-  if(!mv.value.length){
+  if (!mv.value.length) {
     mv.value = lst.value;
   }
-  const stop = watch(
-    () => lst.value.length,
-    (l) => {
-      if (l > 0) {
-        mv.value = lst.value;
-        stop();
+  if (lst.value.length === 0) {
+    const stop = watch(
+      () => lst.value.length,
+      (l) => {
+        if (l > 0) {
+          mv.value = lst.value;
+          stop();
+        }
       }
-    }
-  );
+    );
+  }
   watch(
     () => mv.value,
     (n, o) => {
