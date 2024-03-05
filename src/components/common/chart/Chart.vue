@@ -32,7 +32,6 @@ onMounted(() => {
     chart.resize();
   });
   chart.on("click", (e) => {
-    console.log(e);
     emit("click", e);
   });
 });

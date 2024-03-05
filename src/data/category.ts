@@ -6,6 +6,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-bowl",
   color: "bg-red-600",
+  pieColor: '#5470c6'
 },
 {
   name: "Transport",
@@ -13,6 +14,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-airplane",
   color: "bg-red-600",
+  pieColor: '#91cc75'
 },
 {
   name: "Shopping",
@@ -20,6 +22,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-shopping-cart",
   color: "bg-red-600",
+  pieColor: '#fac858'
 },
 {
   name: "Housing",
@@ -27,6 +30,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-home-alt",
   color: "bg-red-600",
+  pieColor: '#ee6666'
 },
 {
   name: "Entertainment",
@@ -34,6 +38,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-dice-3",
   color: "bg-red-600",
+  pieColor: '#73c0de'
 },
 {
   name: "Medical",
@@ -41,6 +46,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-pill",
   color: "bg-red-600",
+  pieColor: '#3ba272'
 },
 {
   name: "Education",
@@ -48,6 +54,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-pen",
   color: "bg-red-600",
+  pieColor: '#9a60b4'
 },
 {
   name: "Relationship",
@@ -55,6 +62,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-gift",
   color: "bg-red-600",
+  pieColor: '#ea7ccc'
 },
 {
   name: "Balance Account",
@@ -62,6 +70,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-ruler",
   color: "bg-red-600",
+  pieColor: '#40f8ff'
 },
 {
   name: "Other",
@@ -69,6 +78,7 @@ export const ExpensesBillCategories: BillCategory[] = [{
   type: BillType.Expenses,
   icon: "icon-bookmark",
   color: "bg-red-600",
+  pieColor: '#4d3c77'
 },
 ]
 
@@ -78,6 +88,7 @@ export const IncomeBillCategories: BillCategory[] = [{
   type: BillType.Income,
   icon: "icon-credit-card",
   color: "bg-red-600",
+  pieColor: '#5470c6'
 },
 {
   name: "Part Time",
@@ -85,6 +96,7 @@ export const IncomeBillCategories: BillCategory[] = [{
   type: BillType.Income,
   icon: "icon-community",
   color: "bg-red-600",
+  pieColor: '#91cc75'
 },
 {
   name: "Lean",
@@ -92,6 +104,7 @@ export const IncomeBillCategories: BillCategory[] = [{
   type: BillType.Income,
   icon: "icon-mail-open",
   color: "bg-red-600",
+  pieColor: "#fac858",
 },
 {
   name: "Refund",
@@ -99,6 +112,7 @@ export const IncomeBillCategories: BillCategory[] = [{
   type: BillType.Income,
   icon: "icon-arrow-bottom-right",
   color: "bg-red-600",
+  pieColor: "#ee6666",
 },
 {
   name: "Drawback",
@@ -106,6 +120,7 @@ export const IncomeBillCategories: BillCategory[] = [{
   type: BillType.Income,
   icon: "icon-pentagon-right",
   color: "bg-red-600",
+  pieColor: "#73c0de",
 },
 {
   name: "Balance Account",
@@ -113,6 +128,7 @@ export const IncomeBillCategories: BillCategory[] = [{
   type: BillType.Income,
   icon: "icon-ruler",
   color: "bg-red-600",
+  pieColor: "#3ba272",
 },
 {
   name: "Other",
@@ -120,6 +136,7 @@ export const IncomeBillCategories: BillCategory[] = [{
   type: BillType.Income,
   icon: "icon-bookmark",
   color: "bg-red-600",
+  pieColor: "#9a60b4",
 },]
 
 export const BillCategories: BillCategory[] = [

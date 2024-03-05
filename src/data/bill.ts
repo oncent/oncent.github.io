@@ -9,6 +9,7 @@ export type BillCategory = {
   id: string;
   icon: string;
   color: string;
+  pieColor: string;
 };
 
 export type Bill = {
