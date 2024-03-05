@@ -148,7 +148,7 @@
           {{ $t("reset") }}
         </div>
       </div>
-      <div class="flex items-center rounded-sm buttoned px-2" @click="toggle">
+      <div class="flex items-center rounded-sm buttoned px-2" @click="()=>toggleExpand()">
         <div>
           <i class="icon-play-list-search"></i>
         </div>
@@ -178,14 +178,18 @@ export type FilterProp = {
 };
 
 const props = defineProps<{
-  modelValue?: FilterProp;
+  filter?: FilterProp;
 }>();
 const emit = defineEmits<{
   (name: "update:modelValue", value: FilterProp): void;
 }>();
 
-const expended = ref(Boolean(props.modelValue));
-const toggle = () => {
+const expended = ref(Boolean(props.filter));
+const toggleExpand = (v?: boolean) => {
+  if (v !== undefined) {
+    expended.value = v;
+    return
+  }
   expended.value = !expended.value;
 };
 
@@ -208,19 +212,29 @@ const {
   selectedCategories,
   allUsers,
   billCategories,
-  reset,
-} = useFilterForm(props.modelValue);
 
-watchEffect(() => {
-  emit("update:modelValue", {
-    start: start.value?.isValid() ? start.value : undefined,
-    end: end.value?.isValid() ? end.value : undefined,
-    max: max.value,
-    min: min.value,
-    type: type.value,
-    users: selectedUsers.value.map((u) => u.id),
-    categories: selectedCategories.value.map((c) => c.id),
-  });
+  getFilter,
+  setFilter,
+  reset,
+} = useFilterForm(props.filter);
+
+// watchEffect(() => {
+//   emit("update:modelValue", {
+//     start: start.value?.isValid() ? start.value : undefined,
+//     end: end.value?.isValid() ? end.value : undefined,
+//     max: max.value,
+//     min: min.value,
+//     type: type.value,
+//     users: selectedUsers.value.map((u) => u.id),
+//     categories: selectedCategories.value.map((c) => c.id),
+//   });
+// });
+
+
+defineExpose({
+  getFilter,
+  setFilter,
+  toggleExpand
 });
 </script>
 

@@ -17,8 +17,8 @@ export const useFilterForm = (props?: FilterProp) => {
     const start = ref(props?.start ? dayjs(props?.start) : dayjs.unix(-Infinity));
     const end = ref(props?.end ? dayjs(props?.end) : dayjs.unix(Infinity));
 
-    const min = ref(props?.max ?? -Infinity);
-    const max = ref(props?.min ?? Infinity);
+    const min = ref(props?.min ?? -Infinity);
+    const max = ref(props?.max ?? Infinity);
 
     const type = ref<BillType | undefined>(props?.type);
 
@@ -47,6 +47,26 @@ export const useFilterForm = (props?: FilterProp) => {
         selectedCategories.value = [...billCategories.value];
       };
 
+      const   getFilter= () => ({
+        start: start.value?.isValid() ? start.value : undefined,
+        end: end.value?.isValid() ? end.value : undefined,
+        max: max.value,
+        min: min.value,
+        type: type.value,
+        users: selectedUsers.value.map((u) => u.id),
+        categories: selectedCategories.value.map((c) => c.id),
+      })
+
+      const setFilter =(f:FilterProp)=>{
+        start.value=f?.start ? dayjs(f?.start) : dayjs.unix(-Infinity)
+        end.value=f?.end ? dayjs(f?.end) : dayjs.unix(Infinity)
+        max.value=f?.max ?? Infinity
+        min.value=f?.min ?? -Infinity
+        type.value=f.type
+        selectedUsers.value=f?.users?.map(u => allUsers.value.find(l => l.id === u)).filter(Boolean) as User[] ?? []
+        selectedCategories.value=f?.categories?.map(c => BillCategories.find(e => e.id === c)!) ?? []
+      }
+
     return {
         start,
         end,
@@ -60,5 +80,7 @@ export const useFilterForm = (props?: FilterProp) => {
         billCategories,
 
         reset,
+        getFilter,
+        setFilter
     }
 }
