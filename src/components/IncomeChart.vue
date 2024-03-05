@@ -18,6 +18,7 @@
       <template v-if="chartType === 'pie'">
         <Chart class="w-full aspect-square max-h-300px" :option="pieChartOption" @click="onPieChartClick"></Chart>
       </template>
+
       <template v-else>
         <Chart class="w-full aspect-square max-h-300px" :option="lineChartOption"></Chart>
       </template>
@@ -75,6 +76,7 @@ import {
 import { KeepAlive } from "vue";
 import { accAdd as add } from "@/utils/math";
 import { reverse } from "lodash-es";
+import { BillCategories } from "@/data/category";
 
 const props = defineProps<{
   statistic: BillStatistic;
@@ -140,17 +142,20 @@ defineExpose({
 
 const pieChartOption = computed(() => {
   const op: ECOption = {
-    title: {
-      text: pieTitle.value,
-      left: "center",
-      top: "center",
-    },
+    // title: {
+    //   text: pieTitle.value,
+    //   left: "center",
+    //   top: "center",
+    // },
     dataset: {
       dimensions: ["category", "total"],
       source: toRaw(pieDataset.value),
     },
     tooltip: {
-          show: true,
+      show: true,
+      formatter: (params) => {
+        return `${(params as any).name}: ${(params as any).value.total}`;
+      }
     },
     xAxis: { type: "category", show: false },
     yAxis: {},
@@ -159,7 +164,14 @@ const pieChartOption = computed(() => {
         type: "pie",
         radius: ["50%", "70%"],
         stillShowZeroSum: false,
-        // label: { show: false },
+        itemStyle: {
+          color(params) {
+            return BillCategories.find(c => c.name === (params.data as any).name)?.pieColor ?? ''
+          },
+          borderRadius: 5,
+          borderWidth: 2,
+          borderColor: 'white',
+        },
       },
     ],
   };
@@ -178,10 +190,13 @@ const lineChartOption = computed(() => {
       type: 'value'
     },
     tooltip: {
-          show: true,
-          formatter: '{a}: {c0}'
+      show: true,
+      formatter: (params) => {
+        return `${(params as any).seriesName}: ${(params as any).value[1]}`;
+      }
     },
-    series: lineData.value.values.map(({data,user}) => ({
+
+    series: lineData.value.values.map(({ data, user }) => ({
       data: reverse(data),
       type: 'line',
       name: user.name

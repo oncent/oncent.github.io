@@ -33,9 +33,6 @@ export const useFilterForm = (props?: FilterProp) => {
         )
     );
     useLimitedMultiSelect(selectedCategories, billCategories);
-    watch(type, () => {
-        selectedCategories.value = [...billCategories.value];
-    });
 
     const reset = () => {
         start.value = dayjs.unix(-Infinity);
@@ -45,9 +42,9 @@ export const useFilterForm = (props?: FilterProp) => {
         type.value = undefined;
         selectedUsers.value = allUsers.value;
         selectedCategories.value = [...billCategories.value];
-      };
+    };
 
-      const   getFilter= () => ({
+    const getFilter = () => ({
         start: start.value?.isValid() ? start.value : undefined,
         end: end.value?.isValid() ? end.value : undefined,
         max: max.value,
@@ -55,17 +52,17 @@ export const useFilterForm = (props?: FilterProp) => {
         type: type.value,
         users: selectedUsers.value.map((u) => u.id),
         categories: selectedCategories.value.map((c) => c.id),
-      })
+    })
 
-      const setFilter =(f:FilterProp)=>{
-        start.value=f?.start ? dayjs(f?.start) : dayjs.unix(-Infinity)
-        end.value=f?.end ? dayjs(f?.end) : dayjs.unix(Infinity)
-        max.value=f?.max ?? Infinity
-        min.value=f?.min ?? -Infinity
-        type.value=f.type
-        selectedUsers.value=f?.users?.map(u => allUsers.value.find(l => l.id === u)).filter(Boolean) as User[] ?? []
-        selectedCategories.value=f?.categories?.map(c => BillCategories.find(e => e.id === c)!) ?? []
-      }
+    const setFilter = (f: FilterProp) => {
+        start.value = f?.start ? dayjs(f?.start) : dayjs.unix(-Infinity);
+        end.value = f?.end ? dayjs(f?.end) : dayjs.unix(Infinity);
+        max.value = f?.max ?? Infinity;
+        min.value = f?.min ?? -Infinity;
+        type.value = f.type;
+        selectedUsers.value = f?.users?.map(u => allUsers.value.find(l => l.id === u)).filter(Boolean) as User[] ?? [];
+        selectedCategories.value = f?.categories?.map(c => BillCategories.find(e => e.id === c)!) ?? [];
+    }
 
     return {
         start,

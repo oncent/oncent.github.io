@@ -1,10 +1,10 @@
 <template>
   <div class="w-full h-full flex justify-center">
-    <div class="h-full w-full mx-2 max-w-[600px] flex flex-col">
+    <div class="h-full w-full mx-2 max-w-[600px] flex flex-col items-center">
       <div class="filter w-full m-1 p-2">
         <DateRangeSelector :start="startDate" :end="endDate" @change="onDateRangeChange"></DateRangeSelector>
       </div>
-      <div>
+      <div class="w-full">
         <IncomeChart ref="chartRef" :statistic="statistic"></IncomeChart>
       </div>
       <div class="flex p-2 justify-end items-center">

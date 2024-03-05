@@ -37,15 +37,15 @@
         </div>
         <div class="flex rounded-full shadow overflow-hidden">
           <div class="w-80px text-center buttoned py-1"
-            :class="{ '!bg-stone-700 !text-white': type === BillType.Income }" @click="type = BillType.Income">
+            :class="{ '!bg-stone-700 !text-white': type === BillType.Income }" @click="onChangeType(BillType.Income)">
             {{ $t("income") }}
           </div>
           <div class="w-80px text-center buttoned py-1"
-            :class="{ '!bg-stone-700 !text-white': type === BillType.Expenses }" @click="type = BillType.Expenses">
+            :class="{ '!bg-stone-700 !text-white': type === BillType.Expenses }" @click="onChangeType(BillType.Expenses)">
             {{ $t("expenses") }}
           </div>
           <div class="w-80px text-center buttoned py-1" :class="{ '!bg-stone-700 !text-white': type === undefined }"
-            @click="type = undefined">
+            @click="onChangeType(undefined)">
             {{ $t("all") }}
           </div>
         </div>
@@ -217,6 +217,11 @@ const {
   setFilter,
   reset,
 } = useFilterForm(props.filter);
+
+const onChangeType = (t?: BillType) => {
+  type.value = t;
+  selectedCategories.value = [...billCategories.value];
+}
 
 // watchEffect(() => {
 //   emit("update:modelValue", {
