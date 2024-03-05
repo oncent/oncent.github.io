@@ -2,19 +2,10 @@
   <div class="w-full h-full flex justify-center p-2">
     <div class="h-full w-full mx-2 max-w-[600px] flex flex-col">
       <div class="search w-full flex justify-center pt-4">
-        <div
-          class="w-full h-10 shadow-md rounded-sm flex items-center px-4 focus-within:(shadow-lg)"
-        >
+        <div class="w-full h-10 shadow-md rounded-sm flex items-center px-4 focus-within:(shadow-lg)">
           <div class="flex-1">
-            <Clearable
-              :visible="searchText.length > 0"
-              @clear="searchText = ''"
-            >
-              <input
-                v-model="searchText"
-                type="text"
-                class="w-full bg-transparent focus:(border-none outline-none)"
-              />
+            <Clearable :visible="searchText.length > 0" @clear="searchText = ''">
+              <input v-model="searchText" type="text" class="w-full bg-transparent focus:(border-none outline-none)" />
             </Clearable>
           </div>
           <div class="buttoned p-3 rounded-full" @click="search">
@@ -23,7 +14,7 @@
         </div>
       </div>
       <div class="flex-1 flex flex-col overflow-hidden">
-        <BillFilter v-model="filter"></BillFilter>
+        <BillFilter ref="filterRef"></BillFilter>
         <div class="flex items-center justify-between px-2">
           <div class="text-sm text-gray-500">
             {{ $t("total") }}: {{ sortedList.length }}
@@ -38,12 +29,7 @@
           </div>
         </div>
         <div class="flex-1 divide-y overflow-y-auto">
-          <List
-            :list="sortedList"
-            value-key="id"
-            :get-range-height="getRangeHeight"
-            :footer-height="96"
-          >
+          <List :list="sortedList" value-key="id" :get-range-height="getRangeHeight" :footer-height="96">
             <template #default="{ item }">
               <BillItem :bill="(item as Bill)" @click="show(item)" />
             </template>
@@ -53,6 +39,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { isBillMatched, useBills } from "@/hooks/useBills";
 import BillFilter, { type FilterProp } from "@/components/BillFilter.vue";
@@ -69,38 +56,42 @@ const searchText = ref("");
 const list = ref<Bill[]>([]);
 
 const route = useRoute();
-const initialFilter = route.query.filters ? JSON.parse(route.query.filters as string) : undefined;
-const filter = ref<FilterProp>(initialFilter);
+const getRouteFilter = () => route.query.filters ? JSON.parse(route.query.filters as string) : undefined;
+const filterRef = ref<InstanceType<typeof BillFilter>>()
 
 const moneySorterValues = [undefined, 'asc', 'desc'] as const;
 const moneySorter = ref<typeof moneySorterValues[number]>();
-const switchMoneySorter = ()=>{
-  const index = moneySorterValues.findIndex(v=>v===moneySorter.value);
+const switchMoneySorter = () => {
+  const index = moneySorterValues.findIndex(v => v === moneySorter.value);
   const nextIndex = index + 1 >= moneySorterValues.length ? 0 : index + 1;
   moneySorter.value = moneySorterValues[nextIndex];
 }
 
-const sortedList = computed(()=>{
-  if(moneySorter.value === undefined)return list.value;
+const sortedList = computed(() => {
+  if (moneySorter.value === undefined) return list.value;
   return orderBy(list.value, ['money'], [moneySorter.value])
 })
 
 const search = () => {
-  if (!filter.value) {
+  const currentFilter = filterRef.value?.getFilter()
+  if (!currentFilter) {
     list.value = [];
     return;
   }
-  const fp = filter.value;
+  const fp = currentFilter;
   list.value = allBills.value.filter((b) =>
     isBillMatched(b, { ...fp, comment: searchText.value })
   );
 };
 
 
-onMounted(()=>{
-  if(initialFilter){
-    search();
-  };
+onActivated(() => {
+  const routeFilter = getRouteFilter();
+  if (routeFilter) {
+    filterRef.value?.setFilter(routeFilter)
+    filterRef.value?.toggleExpand(true)
+    search()
+  }
 })
 
 const getRangeHeight = (start: number, length: number) => {

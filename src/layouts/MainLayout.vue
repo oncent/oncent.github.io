@@ -18,7 +18,9 @@ const getLastComponent = <T = any>(
   <div class="w-full h-full sm:(pl-18)">
     <router-view v-slot="{ Component, route }">
       <transition name="slide-right" mode="out-in">
-        <component :is="getLastComponent(Component, route)"></component>
+        <keep-alive>
+          <component :is="getLastComponent(Component, route)"></component>
+        </keep-alive>
       </transition>
     </router-view>
     <floating-tab></floating-tab>
