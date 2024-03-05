@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="flex-1 divide-y overflow-y-auto">
-          <List :list="sortedList" value-key="id" :get-range-height="getRangeHeight" :footer-height="96">
+          <List :key="listKey" :list="sortedList" value-key="id" :get-range-height="getRangeHeight" :footer-height="96">
             <template #default="{ item }">
               <BillItem :bill="(item as Bill)" @click="show(item)" />
             </template>
@@ -49,6 +49,7 @@ import List from "@/components/common/List.vue";
 import { useBillInfo } from "@/hooks/useBillInfo";
 import BillItem from "../components/BillItem.vue";
 import { orderBy } from "lodash-es";
+import { useReloadKey } from "@/hooks/useReloadKey";
 
 const { list: allBills } = useBills();
 
@@ -72,6 +73,8 @@ const sortedList = computed(() => {
   return orderBy(list.value, ['money'], [moneySorter.value])
 })
 
+const { key: listKey, reload: reloadList } = useReloadKey();
+
 const search = () => {
   const currentFilter = filterRef.value?.getFilter()
   if (!currentFilter) {
@@ -79,6 +82,7 @@ const search = () => {
     return;
   }
   const fp = currentFilter;
+  reloadList();
   list.value = allBills.value.filter((b) =>
     isBillMatched(b, { ...fp, comment: searchText.value })
   );
@@ -88,9 +92,9 @@ const search = () => {
 onActivated(() => {
   const routeFilter = getRouteFilter();
   if (routeFilter) {
-    filterRef.value?.setFilter(routeFilter)
-    filterRef.value?.toggleExpand(true)
-    search()
+    filterRef.value?.setFilter(routeFilter);
+    filterRef.value?.toggleExpand(true);
+    search();
   }
 })
 
