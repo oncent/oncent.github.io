@@ -17,16 +17,28 @@ const router = createRouter({
           path: "/home",
           name: "home",
           component: () => import("@/views/HomeView.vue"),
+          meta: {
+            mobileMenuIndex: 1,
+            pcMenuIndex: 0,
+          }
         },
         {
           path: "/stat",
           name: "stat",
           component: () => import("@/views/StatView.vue"),
+          meta: {
+            mobileMenuIndex: 2,
+            pcMenuIndex: 1,
+          }
         },
         {
           path: "/search",
           name: "search",
           component: () => import("@/views/SearchView.vue"),
+          meta: {
+            mobileMenuIndex: 0,
+            pcMenuIndex: 2,
+          }
         },
       ],
     },
