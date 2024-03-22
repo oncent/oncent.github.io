@@ -5,5 +5,8 @@ declare module "vue-router" {
     popupOption?: any;
     transitionOption?: any;
     popupTitle?: string;
+
+    mobileMenuIndex?: number;
+    pcMenuIndex?: number;
   }
 }
