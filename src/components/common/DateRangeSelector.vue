@@ -1,67 +1,37 @@
 <template>
   <div class="flex flex-col items-center">
-    <div
-      class="flex justify-around rounded-full items-center max-w-300px w-full"
-    >
-      <div
-        class="flex-1 flex justify-center m-1"
-        :class="{
-          'bg-stone-400 rounded-full text-white': type === 'year',
-        }"
-        @click="type = 'year'"
-      >
+    <div class="flex justify-around rounded-full items-center max-w-300px w-full">
+      <div class="flex-1 flex justify-center m-1" :class="{
+        'bg-stone-400 rounded-full text-white': type === 'year',
+      }" @click="type = 'year'">
         {{ $t("year") }}
       </div>
-      <div
-        class="flex-1 flex justify-center m-1"
-        :class="{
-          'bg-stone-400 rounded-full text-white': type === 'month',
-        }"
-        @click="type = 'month'"
-      >
+      <div class="flex-1 flex justify-center m-1" :class="{
+        'bg-stone-400 rounded-full text-white': type === 'month',
+      }" @click="type = 'month'">
         {{ $t("month") }}
       </div>
-      <div
-        class="flex-1 flex justify-center m-1"
-        :class="{
-          'bg-stone-400 rounded-full text-white': type === 'custom',
-        }"
-        @click="type = 'custom'"
-      >
+      <div class="flex-1 flex justify-center m-1" :class="{
+        'bg-stone-400 rounded-full text-white': type === 'custom',
+      }" @click="type = 'custom'">
         {{ $t("custom") }}
       </div>
     </div>
-    <div
-      v-if="type !== 'custom'"
-      class="slider w-full h-12 flex items-center overflow-x-scroll snap snap-always snap-mandatory snap-x"
-      :key="type"
-      ref="sliderEl"
-    >
-      <div
-        v-for="(time, i) in times"
-        :key="time.name"
-        class="whitespace-nowrap mx-2 px-2 rounded-sm snap-center text-sm"
-        :class="[
-          { 'bg-stone-700 text-white': time.name === selectedTime?.name },
-          `slider-item-${i}`,
-        ]"
-        @click="selectTime(time, i)"
-      >
+    <div v-if="type !== 'custom'"
+      class="slider w-full h-12 flex items-center overflow-x-scroll snap snap-always snap-mandatory snap-x" :key="type"
+      ref="sliderEl">
+      <div v-for="(time, i) in times" :key="time.name"
+        class="slider-item whitespace-nowrap mx-2 px-2 rounded-sm snap-center text-sm" :class="[
+        { 'bg-stone-700 text-white': time.name === selectedTime?.name },
+        `slider-item-${i}`,
+      ]" :ref="(el) => time.name === selectedTime?.name ? (selectedRef = el) : undefined" @click="selectTime(time, i)">
         {{ time.name }}
       </div>
     </div>
     <div v-else class="flex justify-around items-center w-full h-12">
-      <date-time
-        v-model="customFrom"
-        display-formatter="YYYY-MM-DD"
-        class="text-sm buttoned rounded px-2"
-      ></date-time>
+      <date-time v-model="customFrom" display-formatter="YYYY-MM-DD" class="text-sm buttoned rounded px-2"></date-time>
       <div>-</div>
-      <date-time
-        v-model="customTo"
-        display-formatter="YYYY-MM-DD"
-        class="text-sm buttoned rounded px-2"
-      ></date-time>
+      <date-time v-model="customTo" display-formatter="YYYY-MM-DD" class="text-sm buttoned rounded px-2"></date-time>
     </div>
   </div>
 </template>
@@ -167,6 +137,17 @@ onMounted(() => {
   setNearestTime();
 });
 
+const selectedRef = ref<HTMLDivElement>()
+onActivated(() => {
+  // 组件激活时滚动选中的日期到中间
+  if (selectedRef.value === undefined) return;
+  selectedRef.value.scrollIntoView({
+    block: "center",
+    inline: "center",
+    behavior: undefined,
+  });
+});
+
 watch(type, (v) => {
   if (v !== "custom")
     nextTick(() => {
@@ -196,6 +177,14 @@ watchEffect(() => {
 .slider {
   &::-webkit-scrollbar {
     display: none; // Safari and Chrome
+  }
+
+  &-item:first-child {
+    margin-left: 50%;
+  }
+
+  &-item:last-child {
+    margin-right: 50%;
   }
 }
 </style>
