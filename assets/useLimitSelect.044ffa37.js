@@ -1,1 +1,0 @@
-import{w as t}from"./@vue.e6301bd2.js";const n=(e,l)=>{if(e.value.length||(e.value=l.value),l.value.length===0){const u=t(()=>l.value.length,a=>{a>0&&(e.value=l.value,u())})}t(()=>e.value,(u,a)=>{u.length===0&&(a.length===1?e.value=[a[0]]:e.value=[l.value[0]])})};export{n as u};
