@@ -24,7 +24,7 @@
         class="slider-item whitespace-nowrap mx-2 px-2 rounded-sm snap-center text-sm" :class="[
         { 'bg-stone-700 text-white': time.name === selectedTime?.name },
         `slider-item-${i}`,
-      ]" :ref="(el) => time.name === selectedTime?.name ? (selectedRef = el) : undefined" @click="selectTime(time, i)">
+      ]" :ref="(el: any) => time.name === selectedTime?.name ? (selectedRef = el) : undefined" @click="selectTime(time, i)">
         {{ time.name }}
       </div>
     </div>
