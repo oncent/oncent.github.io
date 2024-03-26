@@ -179,12 +179,12 @@ watchEffect(() => {
     display: none; // Safari and Chrome
   }
 
-  &-item:first-child {
-    margin-left: 50%;
-  }
+  // &-item:first-child {
+  //   margin-left: 50%;
+  // }
 
-  &-item:last-child {
-    margin-right: 50%;
-  }
+  // &-item:last-child {
+  //   margin-right: 50%;
+  // }
 }
 </style>
